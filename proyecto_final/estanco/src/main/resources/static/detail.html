@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Tienda</title>
+	<meta name="Description" content="Practica 4 PAT: pagina de Detalle">
+	<meta charset="utf-8">
+	<meta lang="es">
+
+	<!--Link necesario para el css de bootstrap-->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+
+	<style type="text/css">
+		
+		.estancoColors{
+			background-color: #8B0000;
+		}
+	</style>
+
+</head>
+<body>
+
+	<header class="container-fluid estancoColors py-1">
+
+		<div class="row">
+	
+			<div class="container col-8 mt-3">
+				<h1 class="display-1 text-warning text-center mt-4">ESTANCO VIRTUAL</h1>
+				<div class="row">
+					<p class="lead text-warning text-center">Bienvenido a tu estanco de confianza desde casa</p>
+				</div>
+			</div>
+		
+			<div class="container col-4">
+				<img src="https://union-estanqueros.com/wp-content/uploads/2017/07/logo_solo.png" width="200"
+				height="200" class="mt-0">
+			</div>
+		</div>
+	</header>
+
+
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	  <a class="navbar-brand" href="#">
+	      <img src="https://www.estancosalamanca35.com/uploads/kvpWTKOX/Logo.png" width="30" height="30" class="d-inline-block align-top" alt=""> EstancoVIRTUAL
+	  </a>
+
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    	<span class="navbar-toggler-icon"></span>
+  	 </button>
+
+	  <div class="collapse navbar-collapse border border-2 justify-content-center" id="navbarNavAltMarkup">
+	    <div class="navbar-nav">
+	      <a class="nav-item nav-link" href="home.html">HOME</a>
+	      <a class="nav-item nav-link active" href="detail.html">DETAIL</a>
+	      <a class="nav-item nav-link" href="contact.html">CONTACT</a>
+	    </div>
+	  </div>
+	</nav>
+
+
+	<div id= "tabaco-structure" class="container-fluid">
+		
+		<div class="row py-2 estancoColors">
+
+			<h1 class="display-3 text-warning text-center">Tabacos</h1>
+		</div>
+
+		<div class="container py-5">
+				
+				<!--Piensa en que la row es como un container flex box-->
+
+				<div class="row" id="tabaco-grid">
+
+					<!--Cada card tiene un width determinado de 20rem-->
+					<!--Indicamos que el div padre ocupe las columnas necesarias que le exiga el hijo-->
+					<!--Cuando se pase de 12: salto de linea-->
+					<div class="col">
+						<div class="card m-auto my-5" style="width: 20rem">
+						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg" alt="Card image cap">
+						  <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						    <a href="#" class="btn btn-primary">Go somewhere</a>
+						  </div>
+						</div>
+					</div>
+					
+					<div class="col">
+						<div class="card m-auto my-5" style="width: 20rem">
+						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
+						  <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						    <a href="#" class="btn btn-primary">Go somewhere</a>
+						  </div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="card m-auto my-5" style="width: 20rem">
+						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
+						  <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						    <a href="#" class="btn btn-primary">Go somewhere</a>
+						  </div>
+						</div>
+					</div>
+
+					<div class="col">
+						<div class="card m-auto my-5" style="width: 20rem">
+						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
+						  <div class="card-body">
+						    <h5 class="card-title">Card title</h5>
+						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+						    <a href="#" class="btn btn-primary">Go somewhere</a>
+						  </div>
+						</div>
+				   </div>
+
+				</div>
+		</div>
+	</div>
+
+
+	<div class="container">
+		
+		<div class="row">
+			<button type="button" id="boton-mostrar" class="btn btn-outline-warning btn-lg btn-block"> Muestrame los tabacos</button>
+		</div>
+	</div>
+
+
+	<footer class="container-fluid estancoColors py-5 mt-5">
+
+		<div class="container-fluid rounded border border-2 border-warning col-6">
+			<p class="lead text-warning text-center">Derechos reservados</p>
+		</div>
+
+	</footer>
+
+</body>
+
+<script type="text/javascript">
+
+	//inicializo el JSON que me van a devolver del back
+	var industrialSearchModel={};
+	
+	function getArticles(evento){
+
+		fetch("http://localHost:8080/api/tabacoIndustrial",{
+
+			method:"GET",
+			headers:{
+				"Content-Type":"application/json",
+				"Accept": "application/json"
+			}
+
+		})
+
+		.then(function(response){
+			if(response.ok){
+
+				return response.json();
+			}else{
+				throw response;
+			}
+		})
+
+		.then(function (r){
+
+			industrialSearchModel=r;
+			formGrid();
+
+		})
+
+		.catch(error=>console.error(error))
+
+	}
+
+	function formGrid(){
+		const myGrid= document.getElementById("tabaco-grid");
+		
+		let listCajetas=industrialSearchModel.items;
+		let counter= industrialSearchModel.count;
+
+		let html="";
+
+		for (let i=0; i<counter; i++){
+			//creacion de las cards
+
+			let cajeta= listCajetas[i];
+
+			html+= '<div class="col">'+
+			 '<div class="card m-auto my-5" style="width: 20rem">'+
+			 `<img class="card-img-top" src="${cajeta.imagen}" height="400" alt="Card image cap">`+
+			 '<div class="card-body">'+
+			 `<h5 class="card-title">${cajeta.marca}</h5>`+
+			 `<p class="card-text">${cajeta.descripcion}</p>`+
+			 `<p class="card-text">Precio: ${cajeta.precio}</p>`+
+			 `<p class="card-text">Cantidad: ${cajeta.cigarrillos}</p>`+
+			 '<a href="#" class="btn btn-primary">Comprar</a>'+
+			 '</div>'+
+			 '</div>'+
+			 '</div>';
+		}
+
+		myGrid.innerHTML="";
+		myGrid.innerHTML=html;
+		
+
+	}
+
+	const boton= document.getElementById("boton-mostrar");
+
+	boton.addEventListener("click", getArticles);
+
+
+</script>
+</html>
