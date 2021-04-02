@@ -82,9 +82,41 @@
 			</div>
 		</div>
 
-		<div class="container py-5 col" >
+		<div class="container py-5 col">
 
-			<div class="row " id="cart-article" style="visibility: hidden;">
+			<div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="modalTitle">Nuevo Articulo</h5>
+			        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			      </div>
+			      <div class="modal-body" id="modalBody">
+
+		      		<div class="container-fluid text-center my-3">
+						<p class="h5" id="marca-tabaco">VACIO</p>
+					</div>
+
+					<div class="container-fluid text-center my-3">
+						<p class="h5" id="precio-tabaco">VACIO</p>
+					</div>
+			        
+			       <div class="container-fluid text-center my-3">
+						<label class="h5" for="unidades">UNIDADES (1-20)</p>
+						<input type="number" id="unidades" min="1" max="20">
+					</div>
+			        
+			      </div>
+			      <div class="modal-footer">
+			      	 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			        <button type="button" class="btn btn-primary">Add to chart</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+
+		
+		<!--	<div class="row " id="cart-article" style="visibility: hidden;">
 
 				<div class="container-fluid d-flex flex-column">
 
@@ -115,11 +147,12 @@
 
 				</div>
 
-			</div>
+			</div> -->
 				
+
 				<!--Piensa en que la row es como un container flex box-->
 
-			<div class="row" id="tabaco-grid" style="visibility: visible;">
+			<div class="row" id="tabaco-grid">
 
 				<!--Cada card tiene un width determinado de 20rem-->
 				<!--Indicamos que el div padre ocupe las columnas necesarias que le exiga el hijo-->
@@ -130,6 +163,7 @@
 		</div>
 
 	</div>
+
 
 	<footer class="container-fluid estancoColors py-5 mt-5">
 
@@ -151,14 +185,13 @@
 
 	//Nada mas entrar en la pagina hago los dos fetch y me guardo la info en las variables
 
-	loadTabaco("tabacoIndustrial");
-	loadTabaco("tabacoLiar");
+	loadTabacoIndustrial();
+	loadTabacoLiar();
 
-	//Ya tengo mis tabacos guardados en dos JSON industrialSearchModel y liarSearchModel
+	//CUIDADO que los fetch son asincronos si ejecutas aqui formGrid no funciona porque puede ser que 
+	//Este ejecutando la linea sin haber recibido la respuesta del fetch
+	//por eso he metido el formGrid dentro del fetch
 
-	//De primeras formamos el grid de tabacos con el industrial
-
-	formGrid("tabacoIndustrial");
 
 	//Ahora añado un eventListener a window que se activa cada vez que cambia la # de la url
 
@@ -166,22 +199,21 @@
 
 		let hashValue= window.location.hash;
 
-		if(hashValue=="tabacoLiar"){
+		if(hashValue=="#tabacoLiar"){
 			formGrid("tabacoLiar");
 		}
 
-		if(hashValue=="tabacoIndustrial"){
+		if(hashValue=="#tabacoIndustrial"){
 			formGrid("tabacoIndustrial");
 		}
 
 	});
 
 	
-	function loadTabaco(type){
+	function loadTabacoIndustrial(){
 
-		let finalURL="http://localHost:8080/api/"+type;
 
-		fetch(finalURL,{
+		fetch("http://localHost:8080/api/tabacoIndustrial",{
 
 			method:"GET",
 			headers:{
@@ -202,19 +234,47 @@
 
 		.then(function (r){
 
-			if(type=="tabacoIndustrial"){
+			industrialSearchModel=r;
+			formGrid("tabacoIndustrial");
 
-				industrialSearchModel=r;
-			}else{
-				liarSearchModel=r;
+		})
+
+		.catch(error=>console.error(error))
+	}
+
+	function loadTabacoLiar(){
+
+
+		fetch("http://localHost:8080/api/tabacoLiar",{
+
+			method:"GET",
+			headers:{
+				"Content-Type":"application/json",
+				"Accept": "application/json"
 			}
+
+		})
+
+		.then(function(response){
+			if(response.ok){
+
+				return response.json();
+			}else{
+				throw response;
+			}
+		})
+
+		.then(function (r){
+
+			liarSearchModel=r;
+
 		})
 
 		.catch(error=>console.error(error))
 	}
 
 	function formGrid(type){
-		const myGrid= document.getElementById("tabaco-grid");
+		
 		
 		let html="";
 		let listCajetas=null;
@@ -237,7 +297,7 @@
 
 			let cajeta= listCajetas[i];
 			let aux=null;
-			debugger
+			
 
 			if(type=="tabacoIndustrial"){
 				aux=cajeta.cigarrillos;
@@ -261,9 +321,11 @@
 
 		}
 
+		const myGrid= document.getElementById("tabaco-grid");
 		myGrid.innerHTML="";
 		myGrid.innerHTML=html;
-		
+		console.log("punto de control");
+		debugger
 		addEvents(type);
 
 	}
@@ -287,17 +349,32 @@
 
 				//Lo primero distinguimos en que card han dado click
 				var evento = e.currentTarget.id;
-				debugger
+				//debugger
 
 				//Una vez sabemos que id tiene el boton nos guardamos la cajeta correspondiente
 				let cajeta = listCajetas[i];
-				debugger
+				//debugger
 
-				document.getElementById("tabaco-grid").style.visibility = "hidden";
-				document.getElementById("cart-article").style.visibility = "visible";
+				/*
+					document.getElementById("tabaco-grid").style.visibility = "hidden";
+					document.getElementById("cart-article").style.visibility = "visible";
+
+					document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
+					document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
+
+				*/
+
+
+				const myModal = new bootstrap.Modal(document.getElementById('carritoModal'), {
+		  			keyboard: false
+				});
+
 
 				document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
 				document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
+
+				myModal.show();
+
 			})
 		}
 
