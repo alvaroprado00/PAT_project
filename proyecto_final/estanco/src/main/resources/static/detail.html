@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Tienda</title>
-	<meta name="Description" content="Practica 4 PAT: pagina de Detalle">
+	<meta name="Description" content="Tabacos">
 	<meta charset="utf-8">
 	<meta lang="es">
 
@@ -61,9 +61,25 @@
 
 	<div id= "tabaco-structure" class="container-fluid">
 		
-		<div class="row py-2 estancoColors">
+		<div class="row py-2 estancoColors align-items-center">
 
-			<h1 class="display-3 text-warning text-center">Tabacos</h1>
+			<!--Boton desplegable de bootstrap para poder elegir el tabaco que nos muestra-->
+
+			<div class="col-2">
+				<div class="dropdown">
+				  <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+				    Elije el tabaco
+				  </button>
+				  <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="dropdownMenuButton2">
+				    <li><a class="dropdown-item active" href="#tabacoIndustrial">Tabaco Industrial</a></li>
+				    <li><a class="dropdown-item" href="#tabacoLiar"> Tabaco de Liar</a></li>
+				  </ul>
+				</div>
+			</div>
+
+			<div class="col-8">
+				<h1 class="display-3 text-warning text-center">Tabacos</h1>
+			</div>
 		</div>
 
 		<div class="container py-5 col" >
@@ -123,17 +139,49 @@
 
 	</footer>
 
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
 </body>
 
 <script type="text/javascript">
 
 	//inicializo el JSON que me van a devolver del back
 	var industrialSearchModel={};
-	getArticles();
-	
-	function getArticles(){
+	var liarSearchModel={};
 
-		fetch("http://localHost:8080/api/tabacoIndustrial",{
+	//Nada mas entrar en la pagina hago los dos fetch y me guardo la info en las variables
+
+	loadTabaco("tabacoIndustrial");
+	loadTabaco("tabacoLiar");
+
+	//Ya tengo mis tabacos guardados en dos JSON industrialSearchModel y liarSearchModel
+
+	//De primeras formamos el grid de tabacos con el industrial
+
+	formGrid("tabacoIndustrial");
+
+	//Ahora añado un eventListener a window que se activa cada vez que cambia la # de la url
+
+	window.addEventListener("hashchange",function(){
+
+		let hashValue= window.location.hash;
+
+		if(hashValue=="tabacoLiar"){
+			formGrid("tabacoLiar");
+		}
+
+		if(hashValue=="tabacoIndustrial"){
+			formGrid("tabacoIndustrial");
+		}
+
+	});
+
+	
+	function loadTabaco(type){
+
+		let finalURL="http://localHost:8080/api/"+type;
+
+		fetch(finalURL,{
 
 			method:"GET",
 			headers:{
@@ -154,28 +202,49 @@
 
 		.then(function (r){
 
-			industrialSearchModel=r;
-			formGrid();
+			if(type=="tabacoIndustrial"){
 
+				industrialSearchModel=r;
+			}else{
+				liarSearchModel=r;
+			}
 		})
 
 		.catch(error=>console.error(error))
-
 	}
 
-	function formGrid(){
+	function formGrid(type){
 		const myGrid= document.getElementById("tabaco-grid");
 		
 		let html="";
+		let listCajetas=null;
+		let counter=null;
 
-		let listCajetas = industrialSearchModel.items;
-		let counter= industrialSearchModel.count;
+		if(type=="tabacoIndustrial"){
+			listCajetas = industrialSearchModel.items;
+			counter= industrialSearchModel.count;
+		}else{
+			listCajetas=liarSearchModel.items;
+			counter=liarSearchModel.count;
+		}
+			
+
+		//La unica variable que no es igual entre tabaco industrial y liar es cigarrillos vs gramos
+		//Asi que eso lo guardo en una variable a parte
 
 		for (let i=0; i<counter; i++){
 			//creacion de las cards
 
 			let cajeta= listCajetas[i];
+			let aux=null;
 			debugger
+
+			if(type=="tabacoIndustrial"){
+				aux=cajeta.cigarrillos;
+			}else{
+				aux=cajeta.gramos;
+			}
+				
 
 			html+= '<div class="col">'+
 			 '<div class="card m-auto my-5" style="width: 20rem">'+
@@ -184,7 +253,7 @@
 			 `<h5 class="card-title">${cajeta.marca}</h5>`+
 			 `<p class="card-text">${cajeta.descripcion}</p>`+
 			 `<p class="card-text">Precio: ${cajeta.precio}</p>`+
-			 `<p class="card-text">Cantidad: ${cajeta.cigarrillos}</p>`+
+			 `<p class="card-text">Cantidad: ${aux}</p>`+
 			 `<button class="btn btn-primary button-card" id="btn${i}" type="button">Comprar</button>`+
 			 '</div>'+
 			 '</div>'+
@@ -195,23 +264,32 @@
 		myGrid.innerHTML="";
 		myGrid.innerHTML=html;
 		
-		addEvents();
+		addEvents(type);
 
 	}
 
-	function addEvents(){
+	function addEvents(type){
 
-		let listCajetas = industrialSearchModel.items;
+		if(type=="tabacoIndustrial"){
+			listCajetas = industrialSearchModel.items;
+		}else{
+			listCajetas=liarSearchModel.items;
+		}
+			
 
+		//Nos devuelve un vector con todos los buttons de los cards
 		var cards = document.getElementsByClassName("button-card");
 
+		//Añadimos un click listener a cada button de cada card
 		for(let i = 0; i<cards.length;i++){
 
 			cards[i].addEventListener("click",function(e){
 
+				//Lo primero distinguimos en que card han dado click
 				var evento = e.currentTarget.id;
 				debugger
 
+				//Una vez sabemos que id tiene el boton nos guardamos la cajeta correspondiente
 				let cajeta = listCajetas[i];
 				debugger
 

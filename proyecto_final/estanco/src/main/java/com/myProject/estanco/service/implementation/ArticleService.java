@@ -1,6 +1,4 @@
-package com.myProject.estanco.service;
-
-
+package com.myProject.estanco.service.implementation;
 
 import javax.annotation.PostConstruct;
 
@@ -24,8 +22,11 @@ public class ArticleService {
 	@Value("${tabacoIndustrial.url}")
 	private String tabacoIndustrialURL;
 	
-	private TabacoIndustrialSearchModel industrialSearchModel;
+	@Value("${tabacoLiar.url}")
+	private String tabacoLiarURL;
 	
+	private TabacoIndustrialSearchModel industrialSearchModel;
+	private TabacoLiarSearchModel liarSearchModel;
 	
 	public TabacoIndustrialSearchModel getFromAPITabacoIndustrial() {
 		
@@ -45,14 +46,38 @@ public class ArticleService {
 		
 	}
 	
+	public TabacoLiarSearchModel getFromAPITabacoLiar() {
+		
+
+		log.debug("Estoy llegando al metodo getAllTabacoLiar");
+		
+		RestTemplate template = new RestTemplate();
+		
+		HttpMethod metodo= HttpMethod.GET;
+		
+		ResponseEntity<TabacoLiarSearchModel> response =template.exchange(tabacoLiarURL,metodo, null, TabacoLiarSearchModel.class);
+		
+
+		return response.getBody();
+	}
+	
+	
+	
 	public TabacoIndustrialSearchModel getTabacoIndustrialSearch(){
 		//Devuelvo un objeto tipo tabaco industrial Search model que es mas facil de manejar que una lista de objects
 		return industrialSearchModel;
 	}
 	
 	
+	public TabacoLiarSearchModel getTabacoLiarSearch(){
+		
+		return liarSearchModel;
+	}
+	
+	
 	@PostConstruct
-	public void inicializeTabacoIndustrial() {
+	public void inicializeTabacos() {
 		industrialSearchModel=getFromAPITabacoIndustrial();
+		liarSearchModel=getFromAPITabacoLiar();
 	}
 }

@@ -1,4 +1,4 @@
-package com.myProject.estanco.service;
+package com.myProject.estanco.service.implementation;
 
 import javax.annotation.PostConstruct;
 

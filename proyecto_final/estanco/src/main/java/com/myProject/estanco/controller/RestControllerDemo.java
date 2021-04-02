@@ -1,5 +1,7 @@
 package com.myProject.estanco.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,16 +12,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myProject.estanco.model.Coment;
 import com.myProject.estanco.model.GIF;
 import com.myProject.estanco.model.TabacoIndustrialSearchModel;
+import com.myProject.estanco.model.TabacoLiarSearchModel;
 import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
-import com.myProject.estanco.service.ArticleService;
-import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.UserService;
+import com.myProject.estanco.service.implementation.ArticleService;
+import com.myProject.estanco.service.implementation.GIFService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +40,7 @@ public class RestControllerDemo {
 	
 	//Inyecto dependencias de los servicios
 	@Autowired
-	private UserService userService;
+	private UserService userServiceMockApi;
 	
 	@Autowired
 	private ArticleService articleService;
@@ -54,7 +59,7 @@ public class RestControllerDemo {
 		
 		User userToCheck= new User(userLogin);
 		
-		User user=userService.checkUser(userToCheck, "strict");
+		User user=userServiceMockApi.checkUser(userToCheck, "strict");
 		ResponseEntity<User>response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 		if(user!=null) {
@@ -69,7 +74,7 @@ public class RestControllerDemo {
 	@PostMapping("users/coments")
 	public ResponseEntity<User> createNewComment(@RequestBody UserComent userComent){
 		
-		User userCompleto=userService.setNewComent(userComent);
+		User userCompleto=userServiceMockApi.setNewComent(userComent);
 		
 		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
@@ -79,6 +84,25 @@ public class RestControllerDemo {
 		
 		return response;
 	}
+	
+	//Con el Request Param le indicas que la info de userName viene en la url: users/coments?userName=alvaroprado00
+	@GetMapping("users/coments")
+	public ResponseEntity<List<Coment>> getComents(@RequestParam("userName") String userName){
+		
+		List<Coment> comentarios = userServiceMockApi.getComents(userName);
+		
+		
+		ResponseEntity<List<Coment>> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		if (comentarios!= null) {
+			
+			response=new ResponseEntity<>(comentarios, HttpStatus.OK);
+		}
+		
+		return response;
+	}
+	
+	
 	
 	@GetMapping("/tabacoIndustrial")
 	public ResponseEntity<TabacoIndustrialSearchModel> getTabacoIndustrial(){
@@ -93,6 +117,18 @@ public class RestControllerDemo {
 		return response;
 	}
 	
+	@GetMapping("/tabacoLiar")
+	public ResponseEntity<TabacoLiarSearchModel> getTabacoLiar(){
+		
+		log.debug("LLego al controller metodo getTabacoLiar");
+		
+		TabacoLiarSearchModel liarSearchModel= articleService.getTabacoLiarSearch();
+		
+		ResponseEntity<TabacoLiarSearchModel> response= new ResponseEntity<>(liarSearchModel, HttpStatus.OK);
+		
+		return response;
+	}
+	
 	
 	@PostMapping("/users/register")
 	public ResponseEntity<User> register(@RequestBody User user){
@@ -100,7 +136,7 @@ public class RestControllerDemo {
 		log.debug("Llego al register del controller");
 		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		User serviceResponse= userService.registerUser(user);
+		User serviceResponse= userServiceMockApi.registerUser(user);
 		
 		if(serviceResponse!=null) {
 			//Respuesta no nula del service=> Ha sido registrado

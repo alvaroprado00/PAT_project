@@ -52,6 +52,10 @@ public class User {
 	
 	}
 	
+	public User(String userName) {
+		this.setUserName(userName);
+	}
+	
 	public boolean equalsTo(Object o, String type) {
 		
 		type= type.toLowerCase();
@@ -66,11 +70,13 @@ public class User {
 			//Para evitar caseSensitive behaviours
 			
 			String userNameFromU=u.getUserName().toLowerCase();
-			String passwordFromU=u.getPassword().toLowerCase();
 			
 			
 			if(type.equals("strict")) {
 				
+				 //Si usamos un usuario con password= null da fallo
+				
+				String passwordFromU=u.getPassword().toLowerCase();
 				if(userNameFromU.equals(this.getUserName().toLowerCase()) && passwordFromU.equals(this.getPassword().toLowerCase())) {
 					
 					response=true;

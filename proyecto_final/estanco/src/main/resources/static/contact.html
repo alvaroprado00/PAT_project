@@ -27,7 +27,15 @@
 		</div>
 
 		<div class="row">
-			<p class="lead text-warning text-center">Bienvenido a tu estanco de confianza desde casa</p>
+
+			<div class="col-8">
+				<p class="lead text-warning text-end pe-4">Bienvenido a tu estanco de confianza desde casa</p>
+
+			</div>
+			<!--La clase col no tiene el flex por defecto-->
+			<div class="col-4">
+				<p class="lead text-warning text-end fw-bold">Ver mis comentarios <img src="https://cdn.pixabay.com/photo/2018/11/13/21/43/instagram-3814056_960_720.png" id="img-coments" height="40" width="40"></p>
+			</div>
 		<div>
 	</header>
 
@@ -67,20 +75,62 @@
 		</div>
 	</div>
 
+	<div class="container py-5">
+
+		<div class="row py-2">
+			<h3 class="display-3 text-secondary text-center">ESTABLECIMIENTO</h3>
+			<p class="lead text-secondary text-center">Aquí puedes ver unas imágenes de los alrededores de nuestro establecimiento, esperamos verte pronto</p>
+		</div>
+
+		<div class="row mt-3 justify-content-center">
+			<div id="carousel-location" class="carousel slide col-6" data-bs-ride="carousel">
+			  <div class="carousel-indicators">
+
+			  	<!--Es importante indicar en el target el id de nuestro carousel-->
+
+			    <button type="button" data-bs-target="#carousel-location" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+			    <button type="button" data-bs-target="#carousel-location" data-bs-slide-to="1" aria-label="Slide 2"></button>
+			    <button type="button" data-bs-target="#carousel-location" data-bs-slide-to="2" aria-label="Slide 3"></button>
+			  </div>
+
+			  <div class="carousel-inner">
+			    <div class="carousel-item active">
+			      <img src="https://crcestancos.com/wp-content/uploads/2019/06/REFORMA-INTEGRAL-MOBILIARIO-Y-EQUIPAMIENTO-PARA-ESTANCOS-ESTANCO-MADRID-3.jpeg" class="d-block w-100" alt="imagen-interior">
+			    </div>
+			    <div class="carousel-item">
+			      <img src="https://img3.idealista.com/blur/WEB_DETAIL_TOP-L-L/0/id.pro.es.image.master/6c/2b/94/170907154.jpg" class="d-block w-100" alt="imagen-centro-comercial">
+			    </div>
+			    <div class="carousel-item">
+			      <img src="https://archimadrid.org/media/k2/items/cache/a8f99833a85fd766ef002d5e743b8510_XL.jpg" class="d-block w-100" alt="imagen-iglesia">
+			    </div>
+			  </div>
+
+			  <button class="carousel-control-prev" type="button" data-bs-target="#carousel-location" data-bs-slide="prev">
+			    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Previous</span>
+			  </button>
+			  <button class="carousel-control-next" type="button" data-bs-target="#carousel-location" data-bs-slide="next">
+			    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+			    <span class="visually-hidden">Next</span>
+			  </button>
+			</div>
+		</div>
+
+	</div>
+
 	<!-- Modal -->
 	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+	        <h5 class="modal-title" id="modalLabel">Tus Comentarios</h5>
 	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	      </div>
-	      <div class="modal-body">
-	        ...
+	      <div class="modal-body" id="modalBody">
+	        
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
+	        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Listo</button>
 	      </div>
 	    </div>
 	  </div>
@@ -101,12 +151,63 @@
 
 <script type="text/javascript">
 	
-
+	//Me cojo contenio del DOM: el form y la imagen para añadir event listeners y el modal para modificarlo y mostrarlo
 	const formulario= document.getElementById("coment-form");
+	const image=document.getElementById("img-coments");
 
+
+
+	//eventListeners para el formulario y para la imagen de ver mis coments
+	image.addEventListener("click", showComentsFunction);
 	formulario.addEventListener("submit", addComentFunction);
 
+
+
+	//Cojo la info de que user esta activo mediante el local Storage y me guardo el userName que sera lo que use en las request
+	var userActive= JSON.parse(localStorage.getItem("activeUser"));
+	var userName= userActive.userName;
+
 	var userFromBack={};
+	var listaComents={};
+
+
+
+	function showComentsFunction(event){
+
+		//Me creo una url añadiendo la info en el query param userName
+		var urlFinal="http://localHost:8080/api/users/coments?userName="+userName;
+
+		fetch(urlFinal, {
+
+			method:"GET",
+
+			headers:{
+				"Content-Type":"application/json",
+				"Accept":"application/json"
+			}
+
+		})
+
+		.then(function(response){
+
+			if(response.ok){
+				return response.json();
+			}else{
+
+				throw response;
+			}
+		})
+
+		.then(function(r){
+
+			listaComents=r;
+			showDinamicContent();
+		})
+
+		.catch(e=>console.log(e))
+	}
+
+
 
 	function addComentFunction(evento){
 
@@ -124,13 +225,10 @@
 			positiveExperience="false";
 		}
 
-		coment={token:tokenComent, content:content, positiveExperience:positiveExperience};
-
-		//Cojo la info de que user esta activo mediante el local Storage
-		let userActive= JSON.parse(localStorage.getItem("activeUser"));
+		newComent={token:tokenComent, content:content, positiveExperience:positiveExperience};
 
 		//Me creo un JSON del tipo userComent(del back)
-		userToSend={userName:userActive.userName, coment:coment};
+		userToSend={userName:userName, coment:newComent};
 
 		fetch("http://localHost:8080/api/users/coments",{
 
@@ -159,7 +257,6 @@
 			console.log("Usuario que ha comentado con toda su info a continuacion");
 			console.info(r);
 
-			//showDinamicContent()
 			alert("Hola: "+r.firstName+" "+r.lastName+" tu comentario ha sido registrado, agradecemos tu participacion");
 		})
 
@@ -182,9 +279,55 @@
 	}
 
 	function showDinamicContent(){
-		var myModal = new bootstrap.Modal(document.getElementById('myModal'), options)
+
+		const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+  			keyboard: false
+		});
+
+		let modalTitle=document.getElementById("modalLabel");
+		modalTitle.textContent="Tus comentarios: "+userName;
+
+		console.log("punto de control1");
+		let html="";
+		let count=0;
+
+		listaComents.forEach(function(coment){
+
+			count++;
+			let image=null;
+
+			if(coment.positiveExperience){
+				image="https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/Smiley.svg/1200px-Smiley.svg.png";
+			}else{
+				image="https://ih1.redbubble.net/image.1849451903.5040/poster,504x498,f8f8f8-pad,600x600,f8f8f8.jpg";
+			}
+
+			html+='<div class="container">'+
+				  '<div class="row">'+
+				  `<h1 class="display-6 text-center">Comentario ${count}</h1>`+
+				  '</div>'+
+				  '<div class="row justify-content-center">'+
+				  '<div class="container">'+
+				  `<img class="rounded mx-auto d-block" src="${image}" height="40" width="40">`+
+				  '</div>'+
+				  '</div>'+
+				  '<div class="row">'+
+				  `<p class="lead fs-6 text-center">${coment.content}</p>`+
+				  '</div>'+
+				  '</div>';
+		});
+
+		let modalBody=document.getElementById("modalBody");
+		modalBody.innerHTML="";
+		modalBody.innerHTML=html;
+
+
+		console.log("punto de control1");
+
+		myModal.show();
 
 	}
+
 
 </script>
 </html>
