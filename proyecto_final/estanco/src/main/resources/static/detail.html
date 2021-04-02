@@ -66,71 +66,54 @@
 			<h1 class="display-3 text-warning text-center">Tabacos</h1>
 		</div>
 
-		<div class="container py-5">
+		<div class="container py-5 col" >
+
+			<div class="row " id="cart-article" style="visibility: hidden;">
+
+				<div class="container-fluid d-flex flex-column">
+
+					<div class="container-fluid text-center my-3">
+						<p class="h5" id="marca-tabaco">VACIO</p>
+					</div>
+					<div class="container-fluid text-center my-3">
+						<p class="h5" id="precio-tabaco">VACIO</p>
+					</div>
+					<div class="container-fluid d-flex flex-row text-center my-3">
+						<div class="container-fluid">
+							<button class="btn-dark" id="btn-less">-</button>
+						</div>
+						<div class="container-fluid">
+							<p id="unidades">0</p>
+						</div>
+						<div class="container-fluid">
+							<button class="btn-dark" id="btn-more">+</button>
+						</div>
+
+					</div>
+					<div class="container-fluid text-center my-3">
+						<button class="btn-dark" id="btn-add">ADD TO CART</button>
+					</div>
+					<div class="container-fluid text-center my-3">
+						<button class="btn-dark" id="btn-close">CLOSE</button>
+					</div>
+
+				</div>
+
+			</div>
 				
 				<!--Piensa en que la row es como un container flex box-->
 
-				<div class="row" id="tabaco-grid">
+			<div class="row" id="tabaco-grid" style="visibility: visible;">
 
-					<!--Cada card tiene un width determinado de 20rem-->
-					<!--Indicamos que el div padre ocupe las columnas necesarias que le exiga el hijo-->
-					<!--Cuando se pase de 12: salto de linea-->
-					<div class="col">
-						<div class="card m-auto my-5" style="width: 20rem">
-						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg" alt="Card image cap">
-						  <div class="card-body">
-						    <h5 class="card-title">Card title</h5>
-						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						    <a href="#" class="btn btn-primary">Go somewhere</a>
-						  </div>
-						</div>
-					</div>
-					
-					<div class="col">
-						<div class="card m-auto my-5" style="width: 20rem">
-						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
-						  <div class="card-body">
-						    <h5 class="card-title">Card title</h5>
-						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						    <a href="#" class="btn btn-primary">Go somewhere</a>
-						  </div>
-						</div>
-					</div>
+				<!--Cada card tiene un width determinado de 20rem-->
+				<!--Indicamos que el div padre ocupe las columnas necesarias que le exiga el hijo-->
+				<!--Cuando se pase de 12: salto de linea-->
 
-					<div class="col">
-						<div class="card m-auto my-5" style="width: 20rem">
-						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
-						  <div class="card-body">
-						    <h5 class="card-title">Card title</h5>
-						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						    <a href="#" class="btn btn-primary">Go somewhere</a>
-						  </div>
-						</div>
-					</div>
+			</div>
 
-					<div class="col">
-						<div class="card m-auto my-5" style="width: 20rem">
-						  <img class="card-img-top" src="https://d500.epimg.net/cincodias/imagenes/2011/06/15/empresas/1308304735_740215_0000000001_noticia_normal.jpg"  alt="Card image cap">
-						  <div class="card-body">
-						    <h5 class="card-title">Card title</h5>
-						    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						    <a href="#" class="btn btn-primary">Go somewhere</a>
-						  </div>
-						</div>
-				   </div>
-
-				</div>
 		</div>
+
 	</div>
-
-
-	<div class="container">
-		
-		<div class="row">
-			<button type="button" id="boton-mostrar" class="btn btn-outline-warning btn-lg btn-block"> Muestrame los tabacos</button>
-		</div>
-	</div>
-
 
 	<footer class="container-fluid estancoColors py-5 mt-5">
 
@@ -146,8 +129,9 @@
 
 	//inicializo el JSON que me van a devolver del back
 	var industrialSearchModel={};
+	getArticles();
 	
-	function getArticles(evento){
+	function getArticles(){
 
 		fetch("http://localHost:8080/api/tabacoIndustrial",{
 
@@ -182,15 +166,16 @@
 	function formGrid(){
 		const myGrid= document.getElementById("tabaco-grid");
 		
-		let listCajetas=industrialSearchModel.items;
-		let counter= industrialSearchModel.count;
-
 		let html="";
+
+		let listCajetas = industrialSearchModel.items;
+		let counter= industrialSearchModel.count;
 
 		for (let i=0; i<counter; i++){
 			//creacion de las cards
 
 			let cajeta= listCajetas[i];
+			debugger
 
 			html+= '<div class="col">'+
 			 '<div class="card m-auto my-5" style="width: 20rem">'+
@@ -200,21 +185,47 @@
 			 `<p class="card-text">${cajeta.descripcion}</p>`+
 			 `<p class="card-text">Precio: ${cajeta.precio}</p>`+
 			 `<p class="card-text">Cantidad: ${cajeta.cigarrillos}</p>`+
-			 '<a href="#" class="btn btn-primary">Comprar</a>'+
+			 `<button class="btn btn-primary button-card" id="btn${i}" type="button">Comprar</button>`+
 			 '</div>'+
 			 '</div>'+
 			 '</div>';
+
 		}
 
 		myGrid.innerHTML="";
 		myGrid.innerHTML=html;
 		
+		addEvents();
 
 	}
 
-	const boton= document.getElementById("boton-mostrar");
+	function addEvents(){
 
-	boton.addEventListener("click", getArticles);
+		let listCajetas = industrialSearchModel.items;
+
+		var cards = document.getElementsByClassName("button-card");
+
+		for(let i = 0; i<cards.length;i++){
+
+			cards[i].addEventListener("click",function(e){
+
+				var evento = e.currentTarget.id;
+				debugger
+
+				let cajeta = listCajetas[i];
+				debugger
+
+				document.getElementById("tabaco-grid").style.visibility = "hidden";
+				document.getElementById("cart-article").style.visibility = "visible";
+
+				document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
+				document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
+			})
+		}
+
+	}
+
+
 
 
 </script>

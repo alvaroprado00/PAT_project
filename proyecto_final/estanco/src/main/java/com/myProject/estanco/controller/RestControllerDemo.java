@@ -1,7 +1,5 @@
 package com.myProject.estanco.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +8,10 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.myProject.estanco.model.Coment;
 import com.myProject.estanco.model.GIF;
 import com.myProject.estanco.model.TabacoIndustrialSearchModel;
 import com.myProject.estanco.model.User;
@@ -84,25 +79,6 @@ public class RestControllerDemo {
 		
 		return response;
 	}
-	
-	//Con el Request Param le indicas que la info de userName viene en la url: users/coments?userName=alvaroprado00
-	@GetMapping("users/coments")
-	public ResponseEntity<List<Coment>> getComents(@RequestParam("userName") String userName){
-		
-		List<Coment> comentarios = userService.getComents(userName);
-		
-		
-		ResponseEntity<List<Coment>> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		
-		if (comentarios!= null) {
-			
-			response=new ResponseEntity<>(comentarios, HttpStatus.OK);
-		}
-		
-		return response;
-	}
-	
-	
 	
 	@GetMapping("/tabacoIndustrial")
 	public ResponseEntity<TabacoIndustrialSearchModel> getTabacoIndustrial(){

@@ -95,33 +95,6 @@ public class UserService {
 	}
 	
 	
-	
-	/**
-	 * Método para coger los comentarios de un usuario de la aplicación
-	 * @param userName nombre de usuario del cual se quieren los coments
-	 * @return si el usuario esta en la DB devuelve una lista de comentarios. Si no devuelve null.
-	 */
-	public List<Coment> getComents(String userName){
-		
-		//Me creo un usuario con el campo de userName relleno unicamente
-		User userReceived= new User(userName);
-		
-		//Con checkUser me lo devuelve si esta en la memoria de programa
-		User userAnswer= this.checkUser(userReceived, "relaxed");
-		
-		//De primeras la respuesta es null y si encuentra algo ya le paso la lista de verdad
-		List<Coment> response =null;
-		
-		if(userAnswer!=null) {
-		
-			response= userAnswer.getComents();
-			
-		}
-		
-		return response;
-	}
-	
-	
 	/**
 	 * Metodo para encontrar el UserID y poder hacer un PUT
 	 * @param user usuario cuyo ID quieres averiguar
