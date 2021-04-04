@@ -22,6 +22,7 @@ import com.myProject.estanco.model.TabacoLiarSearchModel;
 import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
+import com.myProject.estanco.model.UserPurchase;
 import com.myProject.estanco.service.UserService;
 import com.myProject.estanco.service.implementation.ArticleService;
 import com.myProject.estanco.service.implementation.GIFService;
@@ -83,6 +84,24 @@ public class RestControllerDemo {
 		}
 		
 		return response;
+	}
+	
+	@PostMapping("/users/purchase")
+	public ResponseEntity<User> finishPurchase(@Valid @RequestBody UserPurchase userPurchase){
+		
+		log.debug("Llego a finalizar compra en el controller");
+		
+		User userCompleto = userServiceMockApi.savePurchase(userPurchase);
+		
+		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		if(userCompleto!=null) {
+			response= new ResponseEntity<User>(userCompleto, HttpStatus.OK);
+		}
+		
+		return response;
+		
+				
 	}
 	
 	//Con el Request Param le indicas que la info de userName viene en la url: users/coments?userName=alvaroprado00

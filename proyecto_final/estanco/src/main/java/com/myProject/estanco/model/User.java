@@ -22,6 +22,7 @@ public class User {
 	private String password;
 	private String email;
 	private List<Coment> coments;
+	private List<Purchase> purchases;
 
 	//Al definirnos un constructor se va el que mete por defecto lombok
 	//Hay que indicarle explicitamente que te cree uno con @NoArgsConstructor
@@ -50,6 +51,19 @@ public class User {
 		coments.add(userComent.getComent());
 		this.setComents(coments);
 	
+	}
+
+	public User(UserPurchase userPurchase) {
+		
+		this.setFirstName("demo");
+		this.setLastName("demo");
+		this.setPassword("demo");
+		this.setUserName(userPurchase.getNameUser());
+		this.setEmail("loquesea@gmail.com");
+		ArrayList<Purchase> purchase= new ArrayList<>();
+		purchase.add(new Purchase(userPurchase.getLineasCompra()));
+		this.setPurchases(purchase);
+		
 	}
 	
 	public User(String userName) {

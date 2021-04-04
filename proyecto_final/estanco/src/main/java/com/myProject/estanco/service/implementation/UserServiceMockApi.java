@@ -173,6 +173,7 @@ public class UserServiceMockApi implements UserService {
 		User responseUser=null;
 		
 		try {
+			
 			int id=this.userIDinList(userComplete);
 			
 			//Añado al usuario que esta en la base de datos el nuevo coment
@@ -207,6 +208,58 @@ public class UserServiceMockApi implements UserService {
 		
 		return responseUser;
 		
+	}
+	
+	/**
+	 * Metodo para registrar una cpmpra de un usuario en la API
+	 * 
+	 * @param userPurchase Recibe un usuario con el nombre de user y sus lineas de compra
+	 * @return Te devuelve el mismo usuario si añade las lineas y te devuelve un null si no
+	 */
+	public User savePurchase(UserPurchase userPurchase) {
+		
+		User userToSetPurchase= new User(userPurchase);
+		
+		//Busco el usuario en la memoria de programa
+		User userComplete= this.checkUser(userToSetPurchase, "relaxed");
+		
+		User responseUser=null;
+		
+		try {
+			int id=this.userIDinList(userComplete);
+			
+			//Añado al usuario que esta en la base de datos la nueva purchase
+			
+			userComplete.getPurchases().add(new Purchase(userPurchase.getLineasCompra()));
+			
+			//Hago PUT a la API
+				
+			RestTemplate template= new RestTemplate();
+			HttpMethod metodo= HttpMethod.PUT;
+			
+			HttpHeaders headers= new HttpHeaders();
+			headers.set("Content-Type", "application/json");
+			headers.set("Accept", "application/json");
+			HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
+			
+			String urlCompleta= usersUrl+"/"+String.valueOf(id);
+			
+			ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
+			
+			responseUser=response.getBody();
+			
+			//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
+			this.inicializeUsers();
+			
+		
+			
+		}catch(UserIDNotFoundException uide) {
+			
+			log.warn(uide.getMessage());
+		}
+		
+		return responseUser;
+			
 	}
 	
 	
@@ -266,6 +319,9 @@ public class UserServiceMockApi implements UserService {
 		return response;
 		
 	}
+	
+	
+
 
 	
 	//Despues de inicializar el bean me cojo todos los usuarios de la API para tenerlos ya en memoria

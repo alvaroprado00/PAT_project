@@ -80,11 +80,17 @@
 			<div class="col-8">
 				<h1 class="display-3 text-warning text-center">Tabacos</h1>
 			</div>
+
+			<div class="col-2" style="text-align: right;">
+				<button class="btn btn-warning btn-sm" type="button" id="carritoButton">
+					<img src="imgs/carrito.png" width="30px" height="30px">
+				</button> 
+			</div>
 		</div>
 
 		<div class="container py-5 col">
 
-			<div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  <div class="modal-dialog">
 			    <div class="modal-content">
 			      <div class="modal-header">
@@ -109,46 +115,64 @@
 			      </div>
 			      <div class="modal-footer">
 			      	 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-			        <button type="button" class="btn btn-primary">Add to chart</button>
+			        <button type="button" class="btn btn-primary" id="buttonAdd">Add to chart</button>
 			      </div>
 			    </div>
 			  </div>
 			</div>
 
-		
-		<!--	<div class="row " id="cart-article" style="visibility: hidden;">
+			<!-- Modal para sacar la info por pantalla del carrito -->
 
-				<div class="container-fluid d-flex flex-column">
-
-					<div class="container-fluid text-center my-3">
-						<p class="h5" id="marca-tabaco">VACIO</p>
+			<div class="modal fade" id="carritoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered modal-xl">
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <h5 class="modal-title" id="modalTitle">Shopping Cart</h5>
+					  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-					<div class="container-fluid text-center my-3">
-						<p class="h5" id="precio-tabaco">VACIO</p>
-					</div>
-					<div class="container-fluid d-flex flex-row text-center my-3">
-						<div class="container-fluid">
-							<button class="btn-dark" id="btn-less">-</button>
-						</div>
-						<div class="container-fluid">
-							<p id="unidades">0</p>
-						</div>
-						<div class="container-fluid">
-							<button class="btn-dark" id="btn-more">+</button>
-						</div>
-
-					</div>
-					<div class="container-fluid text-center my-3">
-						<button class="btn-dark" id="btn-add">ADD TO CART</button>
-					</div>
-					<div class="container-fluid text-center my-3">
-						<button class="btn-dark" id="btn-close">CLOSE</button>
-					</div>
-
-				</div>
-
-			</div> -->
+					<div class="modal-body" id="modalBody">
 				
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-6" id="idProductos" style="text-align: left;">
+									<div class="container-fluid mb-3">
+										<p class="h5" style="color:navy;">PRODUCTS</p>
+									</div>
+									<!--Aqui van los nombres de cada producto-->
+								</div>
+								<div class="col-3" id="uds" style="text-align: center;">
+									<div class="container-fluid mb-3" >
+										<p class="h5" style="color:navy;">UDS</p>
+									</div>
+									<!--Aqui van las unidades cada producto-->
+								</div>
+								<div class="col-3" id="precioProducto" style="text-align: center;">
+									<div class="container-fluid mb-3">
+										<p class="h5" style="color:navy;">TOTAL</p>
+									</div>
+									<!--Aqui va el precio total de cada producto-->
+								</div>
+							</div>
+						</div>
+						<div class="container-fluid mt-3">
+							<div class="row">
+								<div class="container-fluid col-6">
+									<p class="h5"> TOTAL AMOUNT </p>
+								</div>
+								<div class="container-fluid col-6">
+									<p class="h5" id="total-amount" style="text-align: right"></p>
+								</div>
+							</div>
+						</div>
+					  
+					</div>
+					<div class="modal-footer">
+						 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel">Cancel</button>
+					 	 <button type="button" class="btn btn-primary" id="finish">Finish Purchase</button>
+					</div>
+				  </div>
+				</div>
+			</div>			
 
 				<!--Piensa en que la row es como un container flex box-->
 
@@ -174,6 +198,7 @@
 	</footer>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
 </body>
 
@@ -182,6 +207,9 @@
 	//inicializo el JSON que me van a devolver del back
 	var industrialSearchModel={};
 	var liarSearchModel={};
+
+	//Array de JSONs de lineas de compra
+	var arrayTabacos = [];
 
 	//Nada mas entrar en la pagina hago los dos fetch y me guardo la info en las variables
 
@@ -326,16 +354,134 @@
 		myGrid.innerHTML=html;
 		console.log("punto de control");
 		debugger
-		addEvents(type);
+		cardsEvents(type);
+		cartEvent();
 
 	}
+	
+	//PARA CALCULAR EL TOTAL
+	var totalAm = 0;
+	var anterior = 0;
 
-	function addEvents(type){
+	function cartEvent(){
+
+		//Evento de pulsar el boton del carrito
+		var add = document.getElementById("carritoButton");
+		add.addEventListener("click",function(e){
+
+			//LOGICA PARA MOSTRAR PRODUCTOS
+			while(anterior < arrayTabacos.length){
+
+				//SACO INFO DEL PRODUCTO
+				var marca = arrayTabacos[anterior].nombre;
+				console.log(marca);
+				var image = arrayTabacos[anterior].imagen;
+				var tipo = arrayTabacos[anterior].tipo;
+				console.log(tipo);
+				var uds = arrayTabacos[anterior].cantidad;
+				console.log(uds);
+				var precio = arrayTabacos[anterior].precio;
+				console.log(precio);
+				var total = precio*uds;
+				console.log(total);
+
+				totalAm = totalAm + total;
+
+				//SELECCIONO DIVS DONDE VOY A AÑADIR INFO
+				var colProd = document.getElementById("idProductos");
+				var colUds = document.getElementById("uds");
+				var colTot = document.getElementById("precioProducto");
+
+				//CREO DIV MARCA y AÑADO AL DIV
+				var divMarca = document.createElement("div");
+				divMarca.id = `divMarca${anterior}`;
+				divMarca.className = "row";
+				var pMarca = document.createElement("p");
+				pMarca.textContent = marca + ": " + tipo;
+
+				divMarca.appendChild(pMarca);
+				colProd.appendChild(divMarca);
+
+				//CREO DIV UNIDADES y AÑADO AL DIV
+				var divUds = document.createElement("div");
+				divUds.id = `divUds${anterior}`;
+				var pUds = document.createElement("p");
+				pUds.textContent = uds + " uds.";
+
+				divUds.appendChild(pUds);
+				colUds.appendChild(divUds);
+				
+				//CREO DIV TOTAL y AÑADO AL DIV
+				var divTot = document.createElement("div");
+				divTot.id = `divTot${anterior}`;
+				var pTot = document.createElement("p");
+				pTot.textContent = total + " $";
+
+				divTot.appendChild(pTot);
+				colTot.appendChild(divTot);		
+
+				anterior++;
+			}	
+
+			anterior;
+
+			document.getElementById("total-amount").innerHTML = totalAm + " $";
+
+			const myModal = new bootstrap.Modal(document.getElementById('carritoModal'), {
+				keyboard: false
+			});
+
+			myModal.show();
+
+			
+	})
+
+	//Pulsa el boton cancel
+	var cancel = document.getElementById("cancel");
+	cancel.addEventListener("click",function(e){
+
+		arrayTabacos.splice(0);
+		//FALTA ELIMINAR LOS DIVS CREADOS EL ARRAY YA ESTA VACIO
+
+	})
+
+	//Pulsa el boton finish
+	var finish = document.getElementById("finish");
+	finish.addEventListener("click",function(e){
+
+		if(arrayTabacos.length > 0){
+			
+			var userPurchase = {};
+
+			var user = localStorage.getItem("activeUser");
+			localStorage.setItem("lineasCompra",JSON.stringify(arrayTabacos));
+
+			userPurchase = {
+				nameUser:user,
+				lineasCompra:arrayTabacos
+			}
+		 
+			window.location.replace("payment.html");
+		}else{
+			alert("NO HAY PRODUCTOS PARA COMPRAR SELECCIONADOS");
+		}
+	})
+}
+
+	function cardsEvents(type){
+
+		var codigo;
+		var tipo;
+		var marca;
+		var precio;
+		var img;
 
 		if(type=="tabacoIndustrial"){
 			listCajetas = industrialSearchModel.items;
+			tipo = "Industrial";
 		}else{
 			listCajetas=liarSearchModel.items;
+			tipo = "Liar";
 		}
 			
 
@@ -365,18 +511,54 @@
 				*/
 
 
-				const myModal = new bootstrap.Modal(document.getElementById('carritoModal'), {
+				const myModal = new bootstrap.Modal(document.getElementById('articleModal'), {
 		  			keyboard: false
 				});
-
-
+				
 				document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
+				marca = cajeta.marca;
 				document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
+				document.getElementById("unidades").innerHTML = "0"; //Si no se queda con el ultimo valor que tuviese
+				precio = cajeta.precio;
+				codigo = cajeta.codigo;
+				img = cajeta.imagen;
 
 				myModal.show();
 
 			})
 		}
+
+		var but = document.getElementById("buttonAdd");
+
+		//Click en addChart
+		but.addEventListener("click",function(e){
+
+			console.log(marca);
+			console.log(precio);
+			console.log(tipo);
+			console.log(codigo);
+			var uds = document.getElementById("unidades").value;	
+			console.log(uds);
+
+			if(uds>0){
+			
+				var lineaCompra = {};
+
+				lineaCompra = {
+					codigo:codigo,
+					imagen:img,
+					nombre:marca,
+					tipo:tipo,
+					cantidad:uds,
+					precio,precio
+				}
+				
+				arrayTabacos.push(lineaCompra);
+			}else{
+				alert("NO HA SELECCIONADO NINGUNA CANTIDAD");
+			}
+
+		})
 
 	}
 
