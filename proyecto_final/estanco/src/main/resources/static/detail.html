@@ -60,11 +60,12 @@
 
 
 	<div id= "tabaco-structure" class="container-fluid">
+
+		<!--Cabecera de la estructura-->
 		
 		<div class="row py-2 estancoColors align-items-center">
 
-			<!--Boton desplegable de bootstrap para poder elegir el tabaco que nos muestra-->
-
+			<!--Boton para elegir tabaco-->
 			<div class="col-2">
 				<div class="dropdown">
 				  <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,10 +78,12 @@
 				</div>
 			</div>
 
+			<!-- Titulo-->
 			<div class="col-8">
 				<h1 class="display-3 text-warning text-center">Tabacos</h1>
 			</div>
 
+			<!-- Carrito -->
 			<div class="col-2" style="text-align: right;">
 				<button class="btn btn-warning btn-sm" type="button" id="carritoButton">
 					<img src="imgs/carrito.png" width="30px" height="30px">
@@ -90,6 +93,8 @@
 
 		<div class="container py-5 col">
 
+			<!-- Modal para mostrar info de un articulo-->
+			
 			<div class="modal fade" id="articleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			  <div class="modal-dialog">
 			    <div class="modal-content">
@@ -109,7 +114,7 @@
 			        
 			       <div class="container-fluid text-center my-3">
 						<label class="h5" for="unidades">UNIDADES (1-20)</p>
-						<input type="number" id="unidades" min="1" max="20">
+						<input type="number" id="unidades" min="1" max="20" required>
 					</div>
 			        
 			      </div>
@@ -202,368 +207,6 @@
 
 </body>
 
-<script type="text/javascript">
+<script type="text/javascript" src="detail.js"></script>
 
-	//inicializo el JSON que me van a devolver del back
-	var industrialSearchModel={};
-	var liarSearchModel={};
-
-	//Array de JSONs de lineas de compra
-	var arrayTabacos = [];
-
-	//Nada mas entrar en la pagina hago los dos fetch y me guardo la info en las variables
-
-	loadTabacoIndustrial();
-	loadTabacoLiar();
-
-	//CUIDADO que los fetch son asincronos si ejecutas aqui formGrid no funciona porque puede ser que 
-	//Este ejecutando la linea sin haber recibido la respuesta del fetch
-	//por eso he metido el formGrid dentro del fetch
-
-
-	//Ahora añado un eventListener a window que se activa cada vez que cambia la # de la url
-
-	window.addEventListener("hashchange",function(){
-
-		let hashValue= window.location.hash;
-
-		if(hashValue=="#tabacoLiar"){
-			formGrid("tabacoLiar");
-		}
-
-		if(hashValue=="#tabacoIndustrial"){
-			formGrid("tabacoIndustrial");
-		}
-
-	});
-
-	
-	function loadTabacoIndustrial(){
-
-
-		fetch("http://localHost:8080/api/tabacoIndustrial",{
-
-			method:"GET",
-			headers:{
-				"Content-Type":"application/json",
-				"Accept": "application/json"
-			}
-
-		})
-
-		.then(function(response){
-			if(response.ok){
-
-				return response.json();
-			}else{
-				throw response;
-			}
-		})
-
-		.then(function (r){
-
-			industrialSearchModel=r;
-			formGrid("tabacoIndustrial");
-
-		})
-
-		.catch(error=>console.error(error))
-	}
-
-	function loadTabacoLiar(){
-
-
-		fetch("http://localHost:8080/api/tabacoLiar",{
-
-			method:"GET",
-			headers:{
-				"Content-Type":"application/json",
-				"Accept": "application/json"
-			}
-
-		})
-
-		.then(function(response){
-			if(response.ok){
-
-				return response.json();
-			}else{
-				throw response;
-			}
-		})
-
-		.then(function (r){
-
-			liarSearchModel=r;
-
-		})
-
-		.catch(error=>console.error(error))
-	}
-
-	function formGrid(type){
-		
-		
-		let html="";
-		let listCajetas=null;
-		let counter=null;
-
-		if(type=="tabacoIndustrial"){
-			listCajetas = industrialSearchModel.items;
-			counter= industrialSearchModel.count;
-		}else{
-			listCajetas=liarSearchModel.items;
-			counter=liarSearchModel.count;
-		}
-			
-
-		//La unica variable que no es igual entre tabaco industrial y liar es cigarrillos vs gramos
-		//Asi que eso lo guardo en una variable a parte
-
-		for (let i=0; i<counter; i++){
-			//creacion de las cards
-
-			let cajeta= listCajetas[i];
-			let aux=null;
-			
-
-			if(type=="tabacoIndustrial"){
-				aux=cajeta.cigarrillos;
-			}else{
-				aux=cajeta.gramos;
-			}
-				
-
-			html+= '<div class="col">'+
-			 '<div class="card m-auto my-5" style="width: 20rem">'+
-			 `<img class="card-img-top" src="${cajeta.imagen}" height="400" alt="Card image cap">`+
-			 '<div class="card-body">'+
-			 `<h5 class="card-title">${cajeta.marca}</h5>`+
-			 `<p class="card-text">${cajeta.descripcion}</p>`+
-			 `<p class="card-text">Precio: ${cajeta.precio}</p>`+
-			 `<p class="card-text">Cantidad: ${aux}</p>`+
-			 `<button class="btn btn-primary button-card" id="btn${i}" type="button">Comprar</button>`+
-			 '</div>'+
-			 '</div>'+
-			 '</div>';
-
-		}
-
-		const myGrid= document.getElementById("tabaco-grid");
-		myGrid.innerHTML="";
-		myGrid.innerHTML=html;
-		console.log("punto de control");
-		debugger
-		cardsEvents(type);
-		cartEvent();
-
-	}
-	
-	//PARA CALCULAR EL TOTAL
-	var totalAm = 0;
-	var anterior = 0;
-
-	function cartEvent(){
-
-		//Evento de pulsar el boton del carrito
-		var add = document.getElementById("carritoButton");
-		add.addEventListener("click",function(e){
-
-			//LOGICA PARA MOSTRAR PRODUCTOS
-			while(anterior < arrayTabacos.length){
-
-				//SACO INFO DEL PRODUCTO
-				var marca = arrayTabacos[anterior].nombre;
-				console.log(marca);
-				var image = arrayTabacos[anterior].imagen;
-				var tipo = arrayTabacos[anterior].tipo;
-				console.log(tipo);
-				var uds = arrayTabacos[anterior].cantidad;
-				console.log(uds);
-				var precio = arrayTabacos[anterior].precio;
-				console.log(precio);
-				var total = precio*uds;
-				console.log(total);
-
-				totalAm = totalAm + total;
-
-				//SELECCIONO DIVS DONDE VOY A AÑADIR INFO
-				var colProd = document.getElementById("idProductos");
-				var colUds = document.getElementById("uds");
-				var colTot = document.getElementById("precioProducto");
-
-				//CREO DIV MARCA y AÑADO AL DIV
-				var divMarca = document.createElement("div");
-				divMarca.id = `divMarca${anterior}`;
-				divMarca.className = "row";
-				var pMarca = document.createElement("p");
-				pMarca.textContent = marca + ": " + tipo;
-
-				divMarca.appendChild(pMarca);
-				colProd.appendChild(divMarca);
-
-				//CREO DIV UNIDADES y AÑADO AL DIV
-				var divUds = document.createElement("div");
-				divUds.id = `divUds${anterior}`;
-				var pUds = document.createElement("p");
-				pUds.textContent = uds + " uds.";
-
-				divUds.appendChild(pUds);
-				colUds.appendChild(divUds);
-				
-				//CREO DIV TOTAL y AÑADO AL DIV
-				var divTot = document.createElement("div");
-				divTot.id = `divTot${anterior}`;
-				var pTot = document.createElement("p");
-				pTot.textContent = total + " $";
-
-				divTot.appendChild(pTot);
-				colTot.appendChild(divTot);		
-
-				anterior++;
-			}	
-
-			anterior;
-
-			document.getElementById("total-amount").innerHTML = totalAm + " $";
-
-			const myModal = new bootstrap.Modal(document.getElementById('carritoModal'), {
-				keyboard: false
-			});
-
-			myModal.show();
-
-			
-	})
-
-	//Pulsa el boton cancel
-	var cancel = document.getElementById("cancel");
-	cancel.addEventListener("click",function(e){
-
-		arrayTabacos.splice(0);
-		//FALTA ELIMINAR LOS DIVS CREADOS EL ARRAY YA ESTA VACIO
-
-	})
-
-	//Pulsa el boton finish
-	var finish = document.getElementById("finish");
-	finish.addEventListener("click",function(e){
-
-		if(arrayTabacos.length > 0){
-			
-			var userPurchase = {};
-
-			var user = localStorage.getItem("activeUser");
-			localStorage.setItem("lineasCompra",JSON.stringify(arrayTabacos));
-
-			userPurchase = {
-				nameUser:user,
-				lineasCompra:arrayTabacos
-			}
-		 
-			window.location.replace("payment.html");
-		}else{
-			alert("NO HAY PRODUCTOS PARA COMPRAR SELECCIONADOS");
-		}
-	})
-}
-
-	function cardsEvents(type){
-
-		var codigo;
-		var tipo;
-		var marca;
-		var precio;
-		var img;
-
-		if(type=="tabacoIndustrial"){
-			listCajetas = industrialSearchModel.items;
-			tipo = "Industrial";
-		}else{
-			listCajetas=liarSearchModel.items;
-			tipo = "Liar";
-		}
-			
-
-		//Nos devuelve un vector con todos los buttons de los cards
-		var cards = document.getElementsByClassName("button-card");
-
-		//Añadimos un click listener a cada button de cada card
-		for(let i = 0; i<cards.length;i++){
-
-			cards[i].addEventListener("click",function(e){
-
-				//Lo primero distinguimos en que card han dado click
-				var evento = e.currentTarget.id;
-				//debugger
-
-				//Una vez sabemos que id tiene el boton nos guardamos la cajeta correspondiente
-				let cajeta = listCajetas[i];
-				//debugger
-
-				/*
-					document.getElementById("tabaco-grid").style.visibility = "hidden";
-					document.getElementById("cart-article").style.visibility = "visible";
-
-					document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
-					document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
-
-				*/
-
-
-				const myModal = new bootstrap.Modal(document.getElementById('articleModal'), {
-		  			keyboard: false
-				});
-				
-				document.getElementById("marca-tabaco").innerHTML = cajeta.marca;
-				marca = cajeta.marca;
-				document.getElementById("precio-tabaco").innerHTML = cajeta.precio;
-				document.getElementById("unidades").innerHTML = "0"; //Si no se queda con el ultimo valor que tuviese
-				precio = cajeta.precio;
-				codigo = cajeta.codigo;
-				img = cajeta.imagen;
-
-				myModal.show();
-
-			})
-		}
-
-		var but = document.getElementById("buttonAdd");
-
-		//Click en addChart
-		but.addEventListener("click",function(e){
-
-			console.log(marca);
-			console.log(precio);
-			console.log(tipo);
-			console.log(codigo);
-			var uds = document.getElementById("unidades").value;	
-			console.log(uds);
-
-			if(uds>0){
-			
-				var lineaCompra = {};
-
-				lineaCompra = {
-					codigo:codigo,
-					imagen:img,
-					nombre:marca,
-					tipo:tipo,
-					cantidad:uds,
-					precio,precio
-				}
-				
-				arrayTabacos.push(lineaCompra);
-			}else{
-				alert("NO HA SELECCIONADO NINGUNA CANTIDAD");
-			}
-
-		})
-
-	}
-
-
-
-
-</script>
 </html>

@@ -132,29 +132,6 @@ public class UserServiceMockApi implements UserService {
 	}
 	
 	
-	/**
-	 * Metodo para encontrar el UserID y poder hacer un PUT
-	 * @param user usuario cuyo ID quieres averiguar
-	 * @return el ID en la lista de users del usuario pasador por parámetro
-	 */
-	public int userIDinList(User user) throws UserIDNotFoundException {
-		int contador=0;
-		int id=0;
-		for(User u: listaUsuarios) {
-			contador++;
-			if (u.equalsTo(user, "strict")) {
-				
-				id=contador;
-				
-			}
-		}
-		
-		if(id==0) {
-			throw new UserIDNotFoundException(user);
-		}
-		
-		return id;
-	}
 	
 	/**
 	 * Método para añadir un comentario realizado en la web por un usuario logeado
@@ -172,39 +149,30 @@ public class UserServiceMockApi implements UserService {
 		
 		User responseUser=null;
 		
-		try {
-			
-			int id=this.userIDinList(userComplete);
-			
-			//Añado al usuario que esta en la base de datos el nuevo coment
-			
-			userComplete.getComents().add(userComent.getComent());
-			
-			//Hago PUT a la API
-				
-			RestTemplate template= new RestTemplate();
-			HttpMethod metodo= HttpMethod.PUT;
-			
-			HttpHeaders headers= new HttpHeaders();
-			headers.set("Content-Type", "application/json");
-			headers.set("Accept", "application/json");
-			HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
-			
-			String urlCompleta= usersUrl+"/"+String.valueOf(id);
-			
-			ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
-			
-			responseUser=response.getBody();
-			
-			//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
-			this.inicializeUsers();
-			
+		long id=userComplete.getId();
 		
+		//Añado al usuario que esta en la base de datos el nuevo coment
+		
+		userComplete.getComents().add(userComent.getComent());
+		
+		//Hago PUT a la API
 			
-		}catch(UserIDNotFoundException uide) {
-			
-			log.warn(uide.getMessage());
-		}
+		RestTemplate template= new RestTemplate();
+		HttpMethod metodo= HttpMethod.PUT;
+		
+		HttpHeaders headers= new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		headers.set("Accept", "application/json");
+		HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
+		
+		String urlCompleta= usersUrl+"/"+String.valueOf(id);
+		
+		ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
+		
+		responseUser=response.getBody();
+		
+		//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
+		this.inicializeUsers();
 		
 		return responseUser;
 		
@@ -225,38 +193,32 @@ public class UserServiceMockApi implements UserService {
 		
 		User responseUser=null;
 		
-		try {
-			int id=this.userIDinList(userComplete);
-			
-			//Añado al usuario que esta en la base de datos la nueva purchase
-			
-			userComplete.getPurchases().add(new Purchase(userPurchase.getLineasCompra()));
-			
-			//Hago PUT a la API
-				
-			RestTemplate template= new RestTemplate();
-			HttpMethod metodo= HttpMethod.PUT;
-			
-			HttpHeaders headers= new HttpHeaders();
-			headers.set("Content-Type", "application/json");
-			headers.set("Accept", "application/json");
-			HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
-			
-			String urlCompleta= usersUrl+"/"+String.valueOf(id);
-			
-			ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
-			
-			responseUser=response.getBody();
-			
-			//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
-			this.inicializeUsers();
-			
+	
+		long id=userComplete.getId();
 		
+		//Añado al usuario que esta en la base de datos la nueva purchase
+		
+		userComplete.setNewPurchase(userPurchase.getLineasCompra());
+		
+		//Hago PUT a la API
 			
-		}catch(UserIDNotFoundException uide) {
-			
-			log.warn(uide.getMessage());
-		}
+		RestTemplate template= new RestTemplate();
+		HttpMethod metodo= HttpMethod.PUT;
+		
+		HttpHeaders headers= new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		headers.set("Accept", "application/json");
+		HttpEntity<User> entity= new HttpEntity<>(userComplete, headers);
+		
+		String urlCompleta= usersUrl+"/"+String.valueOf(id);
+		
+		ResponseEntity<User> response= template.exchange(urlCompleta, metodo, entity, User.class);
+		
+		responseUser=response.getBody();
+		
+		//Volvemos a llamar a inicializeUsers para que en la memoria de programa se registre esto
+		this.inicializeUsers();
+		
 		
 		return responseUser;
 			

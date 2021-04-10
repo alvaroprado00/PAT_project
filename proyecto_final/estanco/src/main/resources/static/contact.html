@@ -214,16 +214,9 @@
 		evento.preventDefault();
 
 		let content=document.getElementById("comentContent").value;
-		let positiveExperience=document.getElementById("positiveComentCheck").value;
+		let positiveExperience=document.getElementById("positiveComentCheck").checked;
 		let tokenComent=makeRandomToken(5);
 
-		//Para nuestro back positive experience es un boolean
-		//Transformo valor
-		if (positiveExperience=="on"){
-			positiveExperience="true";
-		}else{
-			positiveExperience="false";
-		}
 
 		newComent={token:tokenComent, content:content, positiveExperience:positiveExperience};
 

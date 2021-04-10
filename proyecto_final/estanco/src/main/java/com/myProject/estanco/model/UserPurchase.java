@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class UserPurchase {
 	
-	private String nameUser;
+	private String userName;
 	private List<LineaCompra> lineasCompra;
 	
 }

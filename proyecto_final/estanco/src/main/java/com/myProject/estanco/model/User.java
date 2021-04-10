@@ -3,6 +3,11 @@ package com.myProject.estanco.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.springframework.lang.Nullable;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,13 +21,27 @@ public class User {
 	//Dato importante, al indicar un atributo como lista de Objetos(Coments)
 	//Si en el mockapi lo construyes como array de JSON te lo deserializa perfecto
 	
+	@Nullable
+	private long id;
+	@NotNull
 	private String firstName;
+	
+	@NotNull
 	private String lastName;
+	
+	@NotNull
+	@Size(min=5)
 	private String userName;
+	
+	@Size(min=5, max=15)
 	private String password;
+	
+	@Size(min=10)
 	private String email;
+	@Nullable
 	private List<Coment> coments;
-	private List<Purchase> purchases;
+	@Nullable 
+	private ShoppingCart cart;
 
 	//Al definirnos un constructor se va el que mete por defecto lombok
 	//Hay que indicarle explicitamente que te cree uno con @NoArgsConstructor
@@ -58,11 +77,8 @@ public class User {
 		this.setFirstName("demo");
 		this.setLastName("demo");
 		this.setPassword("demo");
-		this.setUserName(userPurchase.getNameUser());
+		this.setUserName(userPurchase.getUserName());
 		this.setEmail("loquesea@gmail.com");
-		ArrayList<Purchase> purchase= new ArrayList<>();
-		purchase.add(new Purchase(userPurchase.getLineasCompra()));
-		this.setPurchases(purchase);
 		
 	}
 	
@@ -106,5 +122,26 @@ public class User {
 		
 		return response;
 	}
+	
+	
+	public void setNewPurchase(List<LineaCompra> lineas){
+		
+		ShoppingCart cart=null;
+		
+		if(this.getCart()==null) {
+			cart= new ShoppingCart();
+		}else {
+			cart= this.getCart();
+		}
+		
+		
+		Purchase newPurchase= new Purchase(lineas);
+		
+		cart.getPurchases().add(newPurchase);
+		cart.refreshNumber();
+		
+		this.setCart(cart);
+	}
+	
 	
 }
