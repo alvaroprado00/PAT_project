@@ -50,8 +50,8 @@ function loginFunction(evento){
 
 function getGIF(){
 
-
-	fetch("http://localHost:8080/api/GIF",{
+	let urlCompleta ="http://localHost:8080/api/GIF?provider=API";
+	fetch(urlCompleta,{
 
 		method:"GET",
 		headers:{

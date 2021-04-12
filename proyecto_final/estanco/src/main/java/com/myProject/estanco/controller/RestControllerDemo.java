@@ -7,7 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +24,9 @@ import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.model.UserPurchase;
 import com.myProject.estanco.service.UserService;
+import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.implementation.ArticleService;
-import com.myProject.estanco.service.implementation.GIFService;
+
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +48,10 @@ public class RestControllerDemo {
 	private ArticleService articleService;
 	
 	@Autowired
-	private GIFService gifService;
+	private GIFService gifServiceMockApi;
+	
+	@Autowired
+	private GIFService gifServiceDB;
 	
 	
 	
@@ -166,20 +170,24 @@ public class RestControllerDemo {
 	
 	
 	@GetMapping("GIF")
-	public ResponseEntity<GIF> getGIF(){
-		 
+	public ResponseEntity<GIF> getGIF(@RequestParam("provider") String provider){
+		
 		ResponseEntity<GIF> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		GIF gif= gifService.getGIFFromMemory();
+		GIF gifResponse=null;
 		
-		if(gif!=null) {
-			
-			response=new ResponseEntity<>(gif, HttpStatus.OK);
-			
+		if(provider.equals("db")) {
+			gifResponse=gifServiceDB.getGIF();
+		}else {
+			gifResponse=gifServiceMockApi.getGIF();
+		}
+		
+		
+		if(gifResponse!=null) {
+			response= new ResponseEntity<>(gifResponse, HttpStatus.OK);
 		}
 		
 		return response;
-		
 	}
 	
 	

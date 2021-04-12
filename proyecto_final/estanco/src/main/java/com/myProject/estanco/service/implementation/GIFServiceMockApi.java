@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.myProject.estanco.model.GIF;
+import com.myProject.estanco.service.GIFService;
 
 import java.util.List;
 
 
-@Service
-public class GIFService {
+@Service("gifServiceMockApi")
+public class GIFServiceMockApi implements GIFService {
 
 	
 	@Value("${GIF.url}")
@@ -37,7 +38,8 @@ public class GIFService {
 	}
 	
 	
-	public GIF getGIFFromMemory() {
+	@Override
+	public GIF getGIF() {
 		return this.myGIF;
 	}
 	
