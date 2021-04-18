@@ -6,6 +6,10 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.MappedCollection;
+import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.lang.Nullable;
 
 import lombok.Data;
@@ -16,31 +20,41 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Table("users")
 public class User {
 	
 	//Dato importante, al indicar un atributo como lista de Objetos(Coments)
 	//Si en el mockapi lo construyes como array de JSON te lo deserializa perfecto
 	
-	@Nullable
+	@Id
+	@Column("id_user")
 	private long id;
 	@NotNull
+	@Column("first_name")
 	private String firstName;
 	
 	@NotNull
+	@Column("last_name")
 	private String lastName;
 	
 	@NotNull
 	@Size(min=5)
+	@Column("user_name")
 	private String userName;
 	
 	@Size(min=5, max=15)
+	@Column("password")
 	private String password;
 	
 	@Size(min=10)
+	@Column("email")
 	private String email;
-	@Nullable
+	
+	//Le estoy diciendo que en la table coments la manera de vincular un coment con un user es a traves del id del user
+	// que sera una columna mas del coment aunque no se defina como atributo en la clase java
+	@MappedCollection(keyColumn="id_user",idColumn="id_user")
 	private List<Coment> coments;
-	@Nullable 
+	@MappedCollection(keyColumn="id_user", idColumn="id_user")
 	private ShoppingCart cart;
 
 	//Al definirnos un constructor se va el que mete por defecto lombok

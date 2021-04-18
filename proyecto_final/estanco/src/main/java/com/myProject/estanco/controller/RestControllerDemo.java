@@ -42,7 +42,7 @@ public class RestControllerDemo {
 	
 	//Inyecto dependencias de los servicios
 	@Autowired
-	private UserService userServiceMockApi;
+	private UserService userService;
 	
 	@Autowired
 	private ArticleService articleService;
@@ -60,7 +60,7 @@ public class RestControllerDemo {
 		
 		User userToCheck= new User(userLogin);
 		
-		User user=userServiceMockApi.checkUser(userToCheck, "strict");
+		User user=userService.checkUser(userToCheck, "strict");
 		ResponseEntity<User>response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
 		if(user!=null) {
@@ -75,7 +75,7 @@ public class RestControllerDemo {
 	@PostMapping("users/coments")
 	public ResponseEntity<User> createNewComment(@RequestBody UserComent userComent){
 		
-		User userCompleto=userServiceMockApi.setNewComent(userComent);
+		User userCompleto=userService.setNewComent(userComent);
 		
 		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
@@ -91,7 +91,7 @@ public class RestControllerDemo {
 		
 		log.debug("Llego a finalizar compra en el controller");
 		
-		User userCompleto = userServiceMockApi.savePurchase(userPurchase);
+		User userCompleto = userService.savePurchase(userPurchase);
 		
 		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
@@ -108,7 +108,7 @@ public class RestControllerDemo {
 	@GetMapping("users/coments")
 	public ResponseEntity<List<Coment>> getComents(@RequestParam("userName") String userName){
 		
-		List<Coment> comentarios = userServiceMockApi.getComents(userName);
+		List<Coment> comentarios = userService.getComents(userName);
 		
 		
 		ResponseEntity<List<Coment>> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -155,7 +155,7 @@ public class RestControllerDemo {
 		log.debug("Llego al register del controller");
 		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		User serviceResponse= userServiceMockApi.registerUser(user);
+		User serviceResponse= userService.registerUser(user);
 		
 		if(serviceResponse!=null) {
 			//Respuesta no nula del service=> Ha sido registrado
