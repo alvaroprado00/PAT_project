@@ -1,6 +1,7 @@
 package com.myProject.estanco.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Service;
 
 import com.myProject.estanco.model.GIF;
@@ -8,6 +9,7 @@ import com.myProject.estanco.repository.GIFRepository;
 import com.myProject.estanco.service.GIFService;
 
 @Service("gifServiceDB")
+@ConditionalOnExpression("'${service-gif-active}'=='DB'") //Mira el project properties y ve cual esta activo
 public class GIFServiceDB implements GIFService{
 	
 	

@@ -48,11 +48,7 @@ public class RestControllerDemo {
 	private ArticleService articleService;
 	
 	@Autowired
-	private GIFService gifServiceMockApi;
-	
-	@Autowired
-	private GIFService gifServiceDB;
-	
+	private GIFService gifService;
 	
 	
 	@PostMapping("/users/login")
@@ -170,17 +166,11 @@ public class RestControllerDemo {
 	
 	
 	@GetMapping("GIF")
-	public ResponseEntity<GIF> getGIF(@RequestParam("provider") String provider){
+	public ResponseEntity<GIF> getGIF(){
 		
 		ResponseEntity<GIF> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		
-		GIF gifResponse=null;
-		
-		if(provider.equals("db")) {
-			gifResponse=gifServiceDB.getGIF();
-		}else {
-			gifResponse=gifServiceMockApi.getGIF();
-		}
+		GIF gifResponse=gifService.getGIF();
 		
 		
 		if(gifResponse!=null) {

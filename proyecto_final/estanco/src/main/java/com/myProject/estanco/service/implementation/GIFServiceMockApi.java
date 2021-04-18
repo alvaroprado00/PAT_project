@@ -3,6 +3,7 @@ package com.myProject.estanco.service.implementation;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,8 @@ import com.myProject.estanco.service.GIFService;
 import java.util.List;
 
 
-@Service("gifServiceMockApi")
+@Service
+@ConditionalOnExpression("'${service-gif-active}' == 'MOCKAPI'")
 public class GIFServiceMockApi implements GIFService {
 
 	
