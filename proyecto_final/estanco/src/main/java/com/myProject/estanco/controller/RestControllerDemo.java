@@ -153,7 +153,7 @@ public class RestControllerDemo {
 	public ResponseEntity<User> register(@RequestBody User user){
 		
 		log.debug("Llego al register del controller");
-		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		
 		User serviceResponse= userService.registerUser(user);
 		

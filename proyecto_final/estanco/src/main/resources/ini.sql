@@ -44,7 +44,7 @@ id_purchase INT
 
 CREATE TABLE IF NOT EXISTS coments(
 
-coment_token INT AUTO_INCREMENT PRIMARY KEY,
+coment_token VARCHAR(10) PRIMARY KEY,
 coment_content VARCHAR(300),
 positive_experience BOOLEAN,
 id_user INT

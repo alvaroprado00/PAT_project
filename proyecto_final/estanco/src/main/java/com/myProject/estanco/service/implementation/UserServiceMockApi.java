@@ -25,12 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 
 //Tendra la logica de negocio de usuarios por eso es un service
 
-//Indicamos el valor del service ("valor")
-//Hay una interfaz userService de la que heredaran todos los posibles services de usuarios
-//Para poder indicar en el restController que dependencia nos va a inyectar hay que jugar con ese valor
+//Con el @ConditionalOnExpression hacemos que solo se levante el userService indicado en la properties
 
  @Slf4j
-@Service("userServiceMockApi")
+@Service
 @ConditionalOnExpression("'${service-user-up}'=='MOCKAPI'")
 public class UserServiceMockApi implements UserService {
 	
@@ -41,7 +39,6 @@ public class UserServiceMockApi implements UserService {
 	
 	private List<User> listaUsuarios;
 	
-
 	@Override
 	public List<User> getAllUsers(){
 			

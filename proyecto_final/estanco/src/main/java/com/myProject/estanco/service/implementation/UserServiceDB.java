@@ -18,34 +18,41 @@ import com.myProject.estanco.model.UserPurchase;
 import com.myProject.estanco.repository.UserRepository;
 import com.myProject.estanco.service.UserService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 @ConditionalOnExpression("'${service-user-up}'=='DB'")
 public class UserServiceDB implements UserService {
-	
-	//Nos creamos a nivel de clase service una lista de todos los usuarios para tenerla en la memoria del programa
-	private List<User> listaUsuarios;
+
 	
 	@Autowired
 	UserRepository userRepository;
 	
 	@Override
-	public List<User> getAllUsers(){
+	public List<User> getAllUsers(){return null;}
+	
 		
-		Iterable<User> allUsers= userRepository.findAll();
+	@Override
+	public User checkUser(User userToCheck, String type) {
 		
-		//Pasamos de un iterable a un ArrayList
+		String userName=userToCheck.getUserName();
+		String userPassword=userToCheck.getPassword();
 		
-		Iterator<User> i= allUsers.iterator();
+		User userChecked;
 		
-		ArrayList<User> usersList= new ArrayList<>();
-		while(i.hasNext()) {
-			usersList.add(i.next());
+		if(type=="strict") {
+		  userChecked=userRepository.findUserByUserNameAndPassword(userName, userPassword);
+			
+		}else if(type=="relaxed") {
+		  userChecked=userRepository.findUserByUserName(userName);
+		}else {
+		  userChecked=null;
 		}
 		
-		return usersList;
 		
+		return userChecked;
 	}
-		
 		
 	@Override
 	public User setNewComent(UserComent userComent) {
@@ -53,9 +60,8 @@ public class UserServiceDB implements UserService {
 		//En este metodo utilizo el metodo por defecto de update del Crud Repository
 		//Es decir cojo de la lista del programa el user que me pasan le añado el coment y hago un add a la DB
 		
-		User userToAddComent= new User(userComent);
 		
-		userToAddComent=checkUser(userToAddComent, "relaxed");
+		User userToAddComent=userRepository.findUserByUserName(userComent.getUserName());
 		
 		if (userToAddComent!=null) {
 			
@@ -81,8 +87,9 @@ public class UserServiceDB implements UserService {
 		User userChecked =null;
 		User userResponse=null;
 		
+		String userName=user.getUserName();
 		//Comprobamos en la memoria de programa si ya existe
-		userChecked=checkUser(user, "relaxed");
+		userChecked=userRepository.findUserByUserName(userName);
 		
 		//En caso de que no, lo guardamos en la DB y actualizamos memoria de programa
 		if(userChecked==null) {
@@ -96,10 +103,11 @@ public class UserServiceDB implements UserService {
 		
 	}
 	
+	@Override
 	public User savePurchase(UserPurchase userPurchase) {
 		
 		//obtengo la entidad usuario completa ya existente
-		User userToUpdate=checkUser(new User(userPurchase), "relaxed");
+		User userToUpdate=userRepository.findUserByUserName(userPurchase.getUserName());
 		
 		//No compruebo si existe porque Tiene que existir si me esta mandando esta info el front
 		
@@ -115,49 +123,18 @@ public class UserServiceDB implements UserService {
 	
 	
 	
-	//LOS DOS METODOS SIGUIENTES SON IGUALES QUE LOS METODOS DEL OTRO SERVICE YA QUE UTILIZAN LA LISTA DE MEMORIA DE PROGRAMA
-	
-	@Override
-	public User checkUser(User userToCheck, String type) {
-	
-			User userResponse=null;		
-			
-			//Para evitar problema de case Sensitive
-			type=type.toLowerCase();
-				
-			for(User u: listaUsuarios) {
-				
-				if (u.equalsTo(userToCheck, type)) {
-					
-					//Si el type es strict tiene que coincidir userName y password 
-					//Si el type es Relaxed solo userName
-					//Si le pasas cualquier otro type te devuelve false
-					
-					userResponse=u;
-					
-				}
-			}
-			
-			//Respondo al controller con el usuario
-
-			return userResponse;
-	}
-	
 	@Override
 	public List<Coment> getComents(String userName){
 		
 		//Me creo un usuario con el campo de userName relleno unicamente
-		User userReceived= new User(userName);
-		
-		//Con checkUser me lo devuelve si esta en la memoria de programa
-		User userAnswer= this.checkUser(userReceived, "relaxed");
+		User userReceived =userRepository.findUserByUserName(userName);
 		
 		//De primeras la respuesta es null y si encuentra algo ya le paso la lista de verdad
 		List<Coment> response =null;
 		
-		if(userAnswer!=null) {
+		if(userReceived!=null) {
 		
-			response= userAnswer.getComents();
+			response= userReceived.getComents();
 			
 		}
 		
@@ -168,7 +145,7 @@ public class UserServiceDB implements UserService {
 	
 	@PostConstruct
 	public void Init(){
-		listaUsuarios=this.getAllUsers();
+		log.debug("Se levanta el userServiceDB!");
 	}
 	
 }
