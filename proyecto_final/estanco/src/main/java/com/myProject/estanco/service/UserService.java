@@ -6,6 +6,7 @@ import com.myProject.estanco.model.Coment;
 import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserPurchase;
+import com.myProject.estanco.model.UserToUpdate;
 
 /**
  * Interfaz en la que se especifican los metodos que es necesario que implemente cualquier service tipo userService
@@ -64,5 +65,12 @@ public interface UserService {
 	 * @return Te devuelve el mismo usuario si añade las lineas y te devuelve un null si no
 	 */
 	public User savePurchase(UserPurchase userPurchase);
+
+	/**
+	 * 
+	 * @param userToUp recibe un POJO formado por el nombre de usuario, el atributo que se quiere modificar y el nuevo valor del mismo
+	 * @return Te devuelve el usuario comleto y modificado o null en caso de error
+	 */
+	public User updateUser(UserToUpdate userToUp);
 	
 }

@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * 
- * Clase para manejar los usuarios que van a acomprar
+ * Clase para manejar los usuarios que van a comprar
  *
  */
 

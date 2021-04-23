@@ -1,7 +1,8 @@
 package com.myProject.estanco.model;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -19,12 +20,12 @@ public class ShoppingCart {
 	private long id;
 	@Column("number_purchases")
 	private int numberOfPurchases;
-	@MappedCollection(keyColumn="id_shopping_cart", idColumn="id_shopping_cart")
-	private List<Purchase> purchases;
+	@MappedCollection(idColumn="id_shopping_cart")
+	private Set<Purchase> purchases;
 	
 	public ShoppingCart() {
 		numberOfPurchases=0;
-		purchases=new ArrayList<>();
+		purchases=new HashSet<>();
 	}
 	
 	public void refreshNumber() {

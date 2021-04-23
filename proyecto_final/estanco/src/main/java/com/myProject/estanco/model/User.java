@@ -1,7 +1,9 @@
 package com.myProject.estanco.model;
 
-import java.util.ArrayList;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -10,7 +12,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
-import org.springframework.lang.Nullable;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,9 +53,9 @@ public class User {
 	
 	//Le estoy diciendo que en la table coments la manera de vincular un coment con un user es a traves del id del user
 	// que sera una columna mas del coment aunque no se defina como atributo en la clase java
-	@MappedCollection(keyColumn="id_user",idColumn="id_user")
-	private List<Coment> coments;
-	@MappedCollection(keyColumn="id_user", idColumn="id_user")
+	@MappedCollection(idColumn="id_user")
+	private Set<Coment> coments;
+	@MappedCollection(idColumn="id_user")
 	private ShoppingCart cart;
 
 	//Al definirnos un constructor se va el que mete por defecto lombok
@@ -67,7 +68,7 @@ public class User {
 		this.setPassword(userLogin.getPassword());
 		this.setUserName(userLogin.getUserName());
 		this.setEmail("loquesea@gmail.com");
-		ArrayList<Coment> coments= new ArrayList<>();
+		Set<Coment> coments= new HashSet<>();
 		coments.add(new Coment());
 		this.setComents(coments);
 	
@@ -80,7 +81,7 @@ public class User {
 		this.setPassword("demo");
 		this.setUserName(userComent.getUserName());
 		this.setEmail("loquesea@gmail.com");
-		ArrayList<Coment> coments= new ArrayList<>();
+		Set<Coment> coments= new HashSet<>();
 		coments.add(userComent.getComent());
 		this.setComents(coments);
 	
@@ -140,7 +141,7 @@ public class User {
 	
 	public void setNewPurchase(List<LineaCompra> lineas){
 		
-		ShoppingCart cart=null;
+		ShoppingCart cart;
 		
 		if(this.getCart()==null) {
 			cart= new ShoppingCart();
@@ -148,9 +149,10 @@ public class User {
 			cart= this.getCart();
 		}
 		
-		
+		//Me creo una nueva compra con las lineas
 		Purchase newPurchase= new Purchase(lineas);
 		
+		//Añado la nueva compra al carrito y numeroDeCompras++
 		cart.getPurchases().add(newPurchase);
 		cart.refreshNumber();
 		

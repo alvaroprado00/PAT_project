@@ -24,14 +24,14 @@ CREATE TABLE IF NOT EXISTS shopping_carts(
 
 id_shopping_cart INT AUTO_INCREMENT PRIMARY KEY,
 number_purchases INT,
-id_user INT
+id_user INT REFERENCES users(id_user)
 );
 
 CREATE TABLE IF NOT EXISTS purchases(
 
 id_purchase VARCHAR(50) PRIMARY KEY,
 date_purchase VARCHAR(50),
-id_shopping_cart INT
+id_shopping_cart INT REFERENCES shopping_carts
 );
 
 CREATE TABLE IF NOT EXISTS lineas_compra(
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS lineas_compra(
 codigo INT AUTO_INCREMENT PRIMARY KEY,
 units INT,
 tipo_tabaco VARCHAR(50),
-id_purchase INT
+id_purchase INT REFERENCES purchases(id_purchase)
 );
 
 CREATE TABLE IF NOT EXISTS coments(
@@ -47,5 +47,5 @@ CREATE TABLE IF NOT EXISTS coments(
 coment_token VARCHAR(10) PRIMARY KEY,
 coment_content VARCHAR(300),
 positive_experience BOOLEAN,
-id_user INT
+id_user INT REFERENCES users(id_user)
 );

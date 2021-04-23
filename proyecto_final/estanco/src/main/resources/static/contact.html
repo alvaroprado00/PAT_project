@@ -28,7 +28,12 @@
 
 		<div class="row">
 
-			<div class="col-8">
+			<div class="col-4">
+				<p class="lead text-warning text-start fw-bold"><img src="https://e7.pngegg.com/pngimages/831/216/png-clipart-computer-icons-youtube-youtube-logo-profile-avatar.png" id="img-perfil" height="40" width="55"> Ver mi perfil</p>
+
+			</div>
+
+			<div class="col-4">
 				<p class="lead text-warning text-end pe-4">Bienvenido a tu estanco de confianza desde casa</p>
 
 			</div>
@@ -38,6 +43,25 @@
 			</div>
 		<div>
 	</header>
+
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	  <a class="navbar-brand" href="#">
+	      <img src="https://www.estancosalamanca35.com/uploads/kvpWTKOX/Logo.png" width="30" height="30" class="d-inline-block align-top" alt=""> EstancoVIRTUAL
+	  </a>
+
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    	<span class="navbar-toggler-icon"></span>
+  	 </button>
+
+	  <div class="collapse navbar-collapse border border-2 justify-content-center" id="navbarNavAltMarkup">
+	    <div class="navbar-nav">
+	      <a class="nav-item nav-link" href="home.html">HOME</a>
+	      <a class="nav-item nav-link" href="detail.html">DETAIL</a>
+	      <a class="nav-item nav-link active" href="contact.html">CONTACT</a>
+	    </div>
+	  </div>
+	</nav>
 
 
 	<div class="container py-5">
@@ -154,11 +178,14 @@
 	//Me cojo contenio del DOM: el form y la imagen para añadir event listeners y el modal para modificarlo y mostrarlo
 	const formulario= document.getElementById("coment-form");
 	const image=document.getElementById("img-coments");
+	const imagePerfil=document.getElementById("img-perfil");
 
 
 
 	//eventListeners para el formulario y para la imagen de ver mis coments
 	image.addEventListener("click", showComentsFunction);
+	imagePerfil.addEventListener("click", function(){
+		window.location.href="perfil.html"});
 	formulario.addEventListener("submit", addComentFunction);
 
 
@@ -168,8 +195,7 @@
 	var userName= userActive.userName;
 
 	var userFromBack={};
-	var listaComents={};
-
+	var listaComents=[];
 
 
 	function showComentsFunction(event){
@@ -201,7 +227,12 @@
 		.then(function(r){
 
 			listaComents=r;
-			showDinamicContent();
+
+			if(listaComents.length!=0){
+				showDinamicContent();
+			}else{
+				showNoComents();
+			}
 		})
 
 		.catch(e=>console.log(e))
@@ -316,6 +347,22 @@
 
 
 		console.log("punto de control1");
+
+		myModal.show();
+
+	}
+
+	function showNoComents(){
+		const myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
+  			keyboard: false
+		});
+
+		let modalTitle=document.getElementById("modalLabel");
+		modalTitle.textContent="Tus comentarios: "+userName;
+
+		let modalBody=document.getElementById("modalBody");
+		modalBody.innerHTML="";
+		modalBody.innerHTML='<div><p class="lead text text-warning"> No nos has dejado comentarios</p></div>';
 
 		myModal.show();
 

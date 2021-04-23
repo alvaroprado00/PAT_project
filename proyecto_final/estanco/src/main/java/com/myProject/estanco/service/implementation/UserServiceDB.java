@@ -15,6 +15,7 @@ import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.model.UserPurchase;
+import com.myProject.estanco.model.UserToUpdate;
 import com.myProject.estanco.repository.UserRepository;
 import com.myProject.estanco.service.UserService;
 
@@ -77,9 +78,8 @@ public class UserServiceDB implements UserService {
 
 		
 		return userToAddComent;
-		
-		
 	}
+	
 	
 	@Override
 	public User registerUser(User user) {
@@ -126,20 +126,28 @@ public class UserServiceDB implements UserService {
 	@Override
 	public List<Coment> getComents(String userName){
 		
-		//Me creo un usuario con el campo de userName relleno unicamente
-		User userReceived =userRepository.findUserByUserName(userName);
+		//Busco el user en la DB y me cojo el userID
+		long userId= userRepository.findUserByUserName(userName).getId();
 		
-		//De primeras la respuesta es null y si encuentra algo ya le paso la lista de verdad
-		List<Coment> response =null;
+		//Voy a la tabla de coments y cojo todos los coments con ese userId
+		return userRepository.findComentsByUserId(userId);
+	}
+	
+	
+	@Override
+	public User updateUser(UserToUpdate u) {
 		
-		if(userReceived!=null) {
+		User userFromDB= userRepository.findUserByUserName(u.getUserName());
 		
-			response= userReceived.getComents();
-			
+		if(u.getField().equals("firstName")) {
+			userFromDB.setFirstName(u.getFieldContent());
+		}else if(u.getField().equals("lastName")) {
+			userFromDB.setLastName(u.getFieldContent());
+		}else if(u.getField().equals("email")) {
+			userFromDB.setEmail(u.getFieldContent());
 		}
 		
-		return response;
-		
+		return userRepository.save(userFromDB);
 	}
 	
 	

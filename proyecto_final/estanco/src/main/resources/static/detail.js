@@ -184,7 +184,7 @@ function cartEvent(){
 		while(anterior < arrayTabacos.length){
 
 			//SACO INFO DEL PRODUCTO
-			let marca = arrayTabacos[anterior].nombre;
+			let marca = arrayTabacos[anterior].marca;
 			console.log(marca);
 			let image = arrayTabacos[anterior].imagen;
 			let tipo = arrayTabacos[anterior].tipo;
@@ -295,8 +295,8 @@ if(uds>0){
 	newArticle={
 		cantidad:uds,
 		marca:articleSelected.marca,
-		image:articleSelected.image,
-		tipo:articleSelected.tipo,
+		imagen:articleSelected.imagen,
+		tipo:tipoDeTabaco,
 		precio:articleSelected.precio
 	}
 
@@ -356,7 +356,7 @@ finish.addEventListener("click",function(e){
 
 		userPurchase = {
 			nameUser:user.userName,
-			lineasCompra:arrayTabacos
+			lineasCompra:arrayLineas
 		}
 	 
 		window.location.replace("payment.html");

@@ -1,7 +1,10 @@
 package com.myProject.estanco.service.implementation;
 
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -38,6 +41,12 @@ public class UserServiceMockApi implements UserService {
 	private String usersUrl;
 	
 	private List<User> listaUsuarios;
+	
+	//Not implemented
+	@Override
+	public User updateUser(UserToUpdate u) {
+		return null;
+	}
 	
 	@Override
 	public List<User> getAllUsers(){
@@ -104,8 +113,10 @@ public class UserServiceMockApi implements UserService {
 		List<Coment> response =null;
 		
 		if(userAnswer!=null) {
-		
-			response= userAnswer.getComents();
+			
+			response=new ArrayList<>();
+			Set<Coment> comentsSet= userAnswer.getComents();
+			response.addAll(comentsSet);
 			
 		}
 		

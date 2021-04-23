@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.model.UserPurchase;
+import com.myProject.estanco.model.UserToUpdate;
 import com.myProject.estanco.service.UserService;
 import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.implementation.ArticleService;
@@ -55,8 +57,6 @@ public class RestControllerDemo {
 	public ResponseEntity<User> loginUser(@Valid @RequestBody UserLogin userLogin){
 		
 		log.debug("Llego al login en el controller");
-		
-		//Check the user opcion strict significa que deben coincider password y userName
 		
 		User userToCheck= new User(userLogin);
 		
@@ -180,6 +180,37 @@ public class RestControllerDemo {
 		return response;
 	}
 	
+	
+	@GetMapping("/users/userInfo/{userName}")
+	public ResponseEntity<User> getInfoFromUser(@PathVariable String userName) {
+		
+		ResponseEntity<User> response =new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		
+		User userInfo= userService.checkUser(new User(userName), "relaxed");
+		
+		if(userInfo!=null) {
+			response= new ResponseEntity<>(userInfo, HttpStatus.OK);
+			
+		}
+		
+		return response;
+	}
+	
+	@PostMapping("/users/userInfo")
+	public ResponseEntity<User> updateInfoUser(@RequestBody UserToUpdate userToUp){
+		
+		log.debug("llego al metodo del controller de update");
+		User u= userService.updateUser(userToUp);
+		
+		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.CONFLICT);
+		
+		if(u!=null) {
+			response=new ResponseEntity<>(u, HttpStatus.OK);
+		}
+		
+		return response;
+			
+	}
 	
 
 

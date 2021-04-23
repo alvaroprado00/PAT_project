@@ -4,7 +4,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -26,7 +29,8 @@ public class Purchase {
 	
 	public Purchase(List<LineaCompra> lineasCompra) {
 		
-		this.lineasCompra = lineasCompra;
+		this.lineasCompra= new HashSet<>();
+		lineasCompra.addAll(lineasCompra);
 		this.date = df.format(Calendar.getInstance().getTime());
 		this.idPurchase= "Purchase"+String.valueOf(Calendar.getInstance().getTime().getMinutes())+String.valueOf(lineasCompra.size());
 
@@ -39,6 +43,6 @@ public class Purchase {
 	@Column("date")
 	private String date;
 
-	@MappedCollection(keyColumn="id_purchase", idColumn="id_purchase")
-	private List<LineaCompra> lineasCompra;
+	@MappedCollection(idColumn="id_purchase")
+	private Set<LineaCompra> lineasCompra;
 }
