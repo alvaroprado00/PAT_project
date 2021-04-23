@@ -32,6 +32,7 @@ public class GIFServiceMockApi implements GIFService {
 		
 		HttpMethod metodo= HttpMethod.GET;
 		
+		//IMPORTANTE PARA CONSEGUIR QUE TE LO MAPEE A UNA LISTA
 		ResponseEntity<List<GIF>> responseEntity = template.exchange(GIFUrl, metodo, null, new ParameterizedTypeReference<List<GIF>>() {});
 
 		List<GIF> gifs = responseEntity.getBody();
