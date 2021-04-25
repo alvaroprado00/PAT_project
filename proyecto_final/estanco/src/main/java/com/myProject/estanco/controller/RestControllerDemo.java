@@ -28,7 +28,8 @@ import com.myProject.estanco.model.UserToUpdate;
 import com.myProject.estanco.service.UserService;
 import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.implementation.ArticleService;
-
+import com.myProject.estanco.service.implementation.TabacoIndustrialServiceDB;
+import com.myProject.estanco.service.implementation.TabacoLiarServiceDB;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,11 +47,17 @@ public class RestControllerDemo {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private ArticleService articleService;
+	//@Autowired
+	//private ArticleService articleService;
 	
 	@Autowired
 	private GIFService gifService;
+	
+	@Autowired
+	private TabacoLiarServiceDB tabacoLiarService;
+	
+	@Autowired
+	private TabacoIndustrialServiceDB tabacoIndustrialService;
 	
 	
 	@PostMapping("/users/login")
@@ -127,11 +134,35 @@ public class RestControllerDemo {
 	public ResponseEntity<TabacoIndustrialSearchModel> getTabacoIndustrial(){
 		
 		
-		log.debug("Llego al controller metodo getTabacoIndustrial");
+		//log.debug("Llego al controller metodo getTabacoIndustrial");
 		
-		TabacoIndustrialSearchModel industrialSearch= articleService.getTabacoIndustrialSearch();
+		//TabacoIndustrialSearchModel industrialSearch= articleService.getTabacoIndustrialSearch();
 		
-		ResponseEntity<TabacoIndustrialSearchModel> response= new ResponseEntity<>(industrialSearch, HttpStatus.OK);
+		//ResponseEntity<TabacoIndustrialSearchModel> response= new ResponseEntity<>(industrialSearch, HttpStatus.OK);
+		
+		ResponseEntity<TabacoIndustrialSearchModel> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		TabacoIndustrialSearchModel tabacoLiar = tabacoIndustrialService.getTabacoIndustrial();
+		
+		if(tabacoLiar != null) {
+			response = new ResponseEntity<>(tabacoLiar,HttpStatus.OK);
+		}
+		
+		return response;
+		
+	}
+	
+	@GetMapping("GIF")
+	public ResponseEntity<GIF> getGIF(){
+		
+		ResponseEntity<GIF> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		GIF gifResponse=gifService.getGIF();
+		
+		
+		if(gifResponse!=null) {
+			response= new ResponseEntity<>(gifResponse, HttpStatus.OK);
+		}
 		
 		return response;
 	}
@@ -139,11 +170,19 @@ public class RestControllerDemo {
 	@GetMapping("/tabacoLiar")
 	public ResponseEntity<TabacoLiarSearchModel> getTabacoLiar(){
 		
-		log.debug("LLego al controller metodo getTabacoLiar");
+		//log.debug("LLego al controller metodo getTabacoLiar");
 		
-		TabacoLiarSearchModel liarSearchModel= articleService.getTabacoLiarSearch();
+		//TabacoLiarSearchModel liarSearchModel= articleService.getTabacoLiarSearch();
 		
-		ResponseEntity<TabacoLiarSearchModel> response= new ResponseEntity<>(liarSearchModel, HttpStatus.OK);
+		//ResponseEntity<TabacoLiarSearchModel> response= new ResponseEntity<>(liarSearchModel, HttpStatus.OK);
+		
+		ResponseEntity<TabacoLiarSearchModel> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+		TabacoLiarSearchModel tabacoLiar = tabacoLiarService.getTabacoLiar();
+		
+		if(tabacoLiar != null) {
+			response = new ResponseEntity<>(tabacoLiar,HttpStatus.OK);
+		}
 		
 		return response;
 	}
@@ -164,21 +203,6 @@ public class RestControllerDemo {
 		return response;		
 	}
 	
-	
-	@GetMapping("GIF")
-	public ResponseEntity<GIF> getGIF(){
-		
-		ResponseEntity<GIF> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		
-		GIF gifResponse=gifService.getGIF();
-		
-		
-		if(gifResponse!=null) {
-			response= new ResponseEntity<>(gifResponse, HttpStatus.OK);
-		}
-		
-		return response;
-	}
 	
 	
 	@GetMapping("/users/userInfo/{userName}")

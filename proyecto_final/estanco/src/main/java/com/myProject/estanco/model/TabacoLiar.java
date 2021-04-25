@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Table("TabacoDeLiar")
+@Table("TABACOLIAR")
 @NoArgsConstructor
 @ToString
 public class TabacoLiar extends Article {
