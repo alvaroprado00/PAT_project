@@ -24,12 +24,14 @@ import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.model.UserPurchase;
+import com.myProject.estanco.model.UserPurchaseInfo;
 import com.myProject.estanco.model.UserToUpdate;
 import com.myProject.estanco.service.UserService;
 import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.implementation.ArticleService;
 import com.myProject.estanco.service.implementation.TabacoIndustrialServiceDB;
 import com.myProject.estanco.service.implementation.TabacoLiarServiceDB;
+import com.myProject.estanco.service.implementation.UserPurchaseServiceDB;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,6 +61,24 @@ public class RestControllerDemo {
 	@Autowired
 	private TabacoIndustrialServiceDB tabacoIndustrialService;
 	
+	@Autowired
+	private UserPurchaseServiceDB userPurchaseService;
+	
+	
+	@PostMapping("/savePurchase")
+	public ResponseEntity<UserPurchaseInfo> savePurchase(@RequestBody UserPurchaseInfo userPurchase){
+		
+		UserPurchaseInfo user = userPurchaseService.savePurchase(userPurchase);
+		
+		ResponseEntity<UserPurchaseInfo> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		
+		if(user!=null) {
+			response= new ResponseEntity<UserPurchaseInfo>(user, HttpStatus.OK);
+		}
+		
+		return response;
+		
+	}
 	
 	@PostMapping("/users/login")
 	public ResponseEntity<User> loginUser(@Valid @RequestBody UserLogin userLogin){

@@ -7,10 +7,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.myProject.estanco.controller.RestControllerDemo;
 import com.myProject.estanco.model.TabacoLiar;
 import com.myProject.estanco.model.TabacoLiarSearchModel;
 import com.myProject.estanco.repository.TabacoLiarRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class TabacoLiarServiceDB {
 	
@@ -35,7 +39,8 @@ public class TabacoLiarServiceDB {
 			conter++;
 		}
 		
-		tabacosLiarModel.setCount(conter-1);
+		tabacosLiarModel.setCount(conter);
+		
 		tabacosLiarModel.setItems(listaTabacos);
 		
 		return tabacosLiarModel;			

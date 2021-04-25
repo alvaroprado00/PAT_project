@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.myProject.estanco.model.TabacoIndustrial;
 
-public interface TabacoIndustrialRepository extends CrudRepository<TabacoIndustrial,String> {
+public interface TabacoIndustrialRepository extends CrudRepository<TabacoIndustrial,Long> {
 
 	//Al extender de CrudRepository hay varios metodos que estan ya implementados
 	

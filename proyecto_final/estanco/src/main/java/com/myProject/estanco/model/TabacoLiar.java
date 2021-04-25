@@ -21,4 +21,5 @@ public class TabacoLiar extends Article {
 	@Getter
 	@Setter
 	private int gramos;
+
 }
