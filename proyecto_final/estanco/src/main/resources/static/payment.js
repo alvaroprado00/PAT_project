@@ -23,9 +23,9 @@ btn.addEventListener("click",function(e){
     }else{
 
         tarjeta = {
-            cc_name:cc_name,
-            cc_number:cc_number,
-            cc_cvv:cc_cvv
+            name:cc_name,
+            number:cc_number,
+            cvv:cc_cvv
         }
     
         userPurchase = {
@@ -35,7 +35,6 @@ btn.addEventListener("click",function(e){
             address:address,
             country:country,
             zip:zip,
-            tarjeta:tarjeta
         }
 
         debugger
@@ -53,7 +52,6 @@ btn.addEventListener("click",function(e){
         
         .then(res=>{
             if(res.ok){
-                alert("ok");
                 return res.json();
             }else{
                 throw res;
@@ -62,6 +60,10 @@ btn.addEventListener("click",function(e){
         
         .then(r=>{
             userPurchaseRecived = r;
+        })
+
+        .catch(e =>{
+            console.log(e);
         })
 
         alert("PURCHASE FINISHED YOU WILL RECIVE AN EMAIL AT : " + userPurchaseRecived.email);

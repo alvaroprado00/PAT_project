@@ -14,9 +14,9 @@ public class UserPurchaseServiceDB {
 	
 	public UserPurchaseInfo savePurchase(UserPurchaseInfo userPurchase) {
 		
-		//boolean situation = repository.savePurchase(userPurchase);
+		UserPurchaseInfo user = repository.save(userPurchase);
 		
-		return userPurchase;
+		return user;
 		
 	}
 	

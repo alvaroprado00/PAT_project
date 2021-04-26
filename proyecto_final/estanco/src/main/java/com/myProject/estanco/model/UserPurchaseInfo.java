@@ -17,7 +17,6 @@ public class UserPurchaseInfo {
 	 private String email;
 	 private String address;
 	 private String country;
-	 private int zip;
-	 private Tarjeta tarjeta;
+	 private String zip;
 
 }
