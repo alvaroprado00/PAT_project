@@ -4,7 +4,6 @@ btn.addEventListener("click",function(e){
 
     var tarjeta = {};
     var userPurchase = {};
-    var userPurchaseRecived = {};
 
     var firstName = document.getElementById("firstName").value;
     var lastName = document.getElementById("lastName").value;
@@ -22,6 +21,11 @@ btn.addEventListener("click",function(e){
 
     }else{
 
+        var userLineas = JSON.parse(localStorage.getItem("userLineas"));
+        var userName = JSON.parse(localStorage.getItem("activeUser"));
+
+        debugger        
+
         tarjeta = {
             name:cc_name,
             number:cc_number,
@@ -35,23 +39,25 @@ btn.addEventListener("click",function(e){
             address:address,
             country:country,
             zip:zip,
+            userName:userName.userName,
+            lineasCompra:userLineas
         }
 
         debugger
 
-        fetch("http://localHost:8080/api/savePurchase",
+        fetch("http://localHost:8080/api/user/purchase",
             {
                 method:"POST",
                 headers:{
-                    "Content-Type":"application/json",
+                        "Content-Type":"application/json",
                     "Accept": "application/json"
                 },
                 body:JSON.stringify(userPurchase)
-
         })
-        
+
         .then(res=>{
             if(res.ok){
+                debugger
                 return res.json();
             }else{
                 throw res;
@@ -59,14 +65,14 @@ btn.addEventListener("click",function(e){
         })
         
         .then(r=>{
-            userPurchaseRecived = r;
+            debugger
+            alert("PURCHASE FINISHED YOU WILL RECIVE AN EMAIL AT : " + userPurchase.email);
+            window.location.replace("home.html");
         })
 
         .catch(e =>{
             console.log(e);
         })
-
-        alert("PURCHASE FINISHED YOU WILL RECIVE AN EMAIL AT : " + userPurchaseRecived.email);
     }
 
 });

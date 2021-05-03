@@ -178,7 +178,7 @@ public class UserServiceMockApi implements UserService {
 		
 		//Añado al usuario que esta en la base de datos la nueva purchase
 		
-		userComplete.setNewPurchase(userPurchase.getLineasCompra());
+		userComplete.setNewPurchase(userPurchase);
 		
 		//Hago PUT a la API
 			
@@ -262,7 +262,6 @@ public class UserServiceMockApi implements UserService {
 		log.debug("Inicializando lista de usuarios en memoria de programa...");
 		listaUsuarios=this.getAllUsers();
 	
-	}
-	
+	}	
 	
 }

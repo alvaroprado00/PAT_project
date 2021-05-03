@@ -23,13 +23,14 @@ class GlobalControllerExceptionHandler {
 	
 	//Para el resto de exceptions por ahora muestro el mensaje mas bonito
 	
-	@ExceptionHandler(Exception.class)
+	/*@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> handleGenericError(Exception e) {
 		
 		log.warn("Está ocurriendo una exception generica: "+e.getMessage());
 		ResponseEntity<String> response= new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		return response;
 	}
+	*/
 	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<AtributeErrorGroup> handleArgumentExceptions(MethodArgumentNotValidException e){

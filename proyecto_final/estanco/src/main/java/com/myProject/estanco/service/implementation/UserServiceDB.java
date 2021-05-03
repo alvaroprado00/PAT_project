@@ -15,6 +15,7 @@ import com.myProject.estanco.model.User;
 import com.myProject.estanco.model.UserComent;
 import com.myProject.estanco.model.UserLogin;
 import com.myProject.estanco.model.UserPurchase;
+import com.myProject.estanco.model.UserPurchaseInfo;
 import com.myProject.estanco.model.UserToUpdate;
 import com.myProject.estanco.repository.UserRepository;
 import com.myProject.estanco.service.UserService;
@@ -112,15 +113,14 @@ public class UserServiceDB implements UserService {
 		//No compruebo si existe porque Tiene que existir si me esta mandando esta info el front
 		
 		//Añado a esta una nueva compra formada por las lineas de compra especificadas
-		userToUpdate.setNewPurchase(userPurchase.getLineasCompra());
+		userToUpdate.setNewPurchase(userPurchase);
 			
-		//Actualizo DB
+		//Actualizo DB ¿ELIMINAR ANTES EL QUE YA ESTABA?
 		User userResponse= userRepository.save(userToUpdate);
 			
 		return userResponse;
 		
 	}
-	
 	
 	
 	@Override

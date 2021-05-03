@@ -32,4 +32,5 @@ public class ShoppingCart {
 		
 		this.numberOfPurchases++;
 	}
+
 }

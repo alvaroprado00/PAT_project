@@ -350,16 +350,13 @@ finish.addEventListener("click",function(e){
 
 	if(arrayTabacos.length > 0){
 		
-		var userPurchase = {};
+		//Para sacar la info en el js payment y poder comprobar info
+		localStorage.setItem("userLineas",JSON.stringify(arrayLineas));
 
-		var user = localStorage.getItem("activeUser");
+		debugger
 
-		userPurchase = {
-			nameUser:user.userName,
-			lineasCompra:arrayLineas
-		}
-	 
 		window.location.replace("payment.html");
+	 
 	}else{
 		alert("NO HAY PRODUCTOS PARA COMPRAR SELECCIONADOS");
 	}

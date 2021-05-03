@@ -31,7 +31,6 @@ import com.myProject.estanco.service.GIFService;
 import com.myProject.estanco.service.implementation.ArticleService;
 import com.myProject.estanco.service.implementation.TabacoIndustrialServiceDB;
 import com.myProject.estanco.service.implementation.TabacoLiarServiceDB;
-import com.myProject.estanco.service.implementation.UserPurchaseServiceDB;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,26 +58,8 @@ public class RestControllerDemo {
 	private TabacoLiarServiceDB tabacoLiarService;
 	
 	@Autowired
-	private TabacoIndustrialServiceDB tabacoIndustrialService;
+	private TabacoIndustrialServiceDB tabacoIndustrialService;	
 	
-	@Autowired
-	private UserPurchaseServiceDB userPurchaseService;
-	
-	
-	@PostMapping("/savePurchase")
-	public ResponseEntity<UserPurchaseInfo> savePurchase(@RequestBody UserPurchaseInfo userPurchase){
-		
-		UserPurchaseInfo user = userPurchaseService.savePurchase(userPurchase);
-		
-		ResponseEntity<UserPurchaseInfo> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		
-		if(user!=null) {
-			response= new ResponseEntity<UserPurchaseInfo>(user, HttpStatus.OK);
-		}
-		
-		return response;
-		
-	}
 	
 	@PostMapping("/users/login")
 	public ResponseEntity<User> loginUser(@Valid @RequestBody UserLogin userLogin){
@@ -113,21 +94,16 @@ public class RestControllerDemo {
 		return response;
 	}
 	
-	@PostMapping("/users/purchase")
+	@PostMapping("user/purchase")
 	public ResponseEntity<User> finishPurchase(@Valid @RequestBody UserPurchase userPurchase){
 		
 		log.debug("Llego a finalizar compra en el controller");
 		
 		User userCompleto = userService.savePurchase(userPurchase);
 		
-		ResponseEntity<User> response= new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
-		if(userCompleto!=null) {
-			response= new ResponseEntity<User>(userCompleto, HttpStatus.OK);
-		}
+		ResponseEntity<User> response =  new ResponseEntity<User>(userCompleto, HttpStatus.OK);
 		
 		return response;
-		
 				
 	}
 	

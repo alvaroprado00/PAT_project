@@ -2,6 +2,7 @@ package com.myProject.estanco.model;
 
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -139,7 +140,7 @@ public class User {
 	}
 	
 	
-	public void setNewPurchase(List<LineaCompra> lineas){
+	public void setNewPurchase(UserPurchase user){
 		
 		ShoppingCart cart;
 		
@@ -150,14 +151,13 @@ public class User {
 		}
 		
 		//Me creo una nueva compra con las lineas
-		Purchase newPurchase= new Purchase(lineas);
+		Purchase newPurchase= new Purchase(user.getLineasCompra(),new UserPurchaseInfo(user));
 		
 		//Añado la nueva compra al carrito y numeroDeCompras++
 		cart.getPurchases().add(newPurchase);
 		cart.refreshNumber();
 		
 		this.setCart(cart);
-	}
-	
+	}	
 	
 }
