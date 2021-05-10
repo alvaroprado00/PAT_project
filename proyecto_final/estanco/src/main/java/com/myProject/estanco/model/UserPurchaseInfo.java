@@ -22,7 +22,7 @@ public class UserPurchaseInfo {
 	 }
 	 
 		@Id
-		@Column("id_user")
+		@Column("id_user_purchase")
 		 private long id;
 		
 		@NotNull

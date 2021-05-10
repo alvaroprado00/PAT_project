@@ -12,6 +12,10 @@ public class LineaCompra {
 	
 	//Aqui creo que da igual como le llames en tu tabla de sql porque lo identifica al ser el ID
 	@Id
+	@Column("id_linea")
+	private long id_linea;
+	
+	@Column("codigo")
 	private String codigo;
 	
 	@Column("units")

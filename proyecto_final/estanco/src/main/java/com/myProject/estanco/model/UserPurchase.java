@@ -18,44 +18,31 @@ import lombok.Data;
  *
  */
 
-@Table("usersPurchases")
-
 @Data
 public class UserPurchase {
-	
-	@Id
-	@Column("id_user")
-	 private long id;
+		
+	@NotNull
+	private String firstName;
 	
 	@NotNull
-	@Column("first_mame")
-	 private String firstName;
-	@NotNull
-	@Column("last_name") 
 	private String lastName;
 	 
 	@NotNull
-	@Column("email")
 	private String email;
 	
 	@NotNull
-	@Column("address")
 	private String address;
 	
 	@NotNull
-	@Column("country")
 	private String country;
 	
 	@NotNull
-	@Column("zip")
 	private String zip;	
 	
 	@NotNull
-	@Column("userName")
 	private String userName;
 	
 	@NotNull
-	@MappedCollection(idColumn="id_purchase")
 	private Set<LineaCompra> lineasCompra;
 	
 }

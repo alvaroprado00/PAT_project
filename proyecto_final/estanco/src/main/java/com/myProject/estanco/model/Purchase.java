@@ -30,10 +30,9 @@ public class Purchase {
 	static String pattern = "MM/dd/yyyy HH:mm:ss";
 	static DateFormat df = new SimpleDateFormat(pattern);
 	
-	public Purchase(Set<LineaCompra> lineasCompra,UserPurchaseInfo user) {
+	public Purchase(Set<LineaCompra> lineasDeCompra,UserPurchaseInfo user) {
 		
-		this.lineasCompra= new HashSet<>();
-		lineasCompra.addAll(lineasCompra);
+		this.lineasCompra = lineasDeCompra;
 		this.date = df.format(Calendar.getInstance().getTime());
 		this.idPurchase= "Purchase"+String.valueOf(Calendar.getInstance().getTime().getMinutes())+String.valueOf(lineasCompra.size());
 		this.userPurchase = user;
@@ -41,6 +40,9 @@ public class Purchase {
 	
 	@Id
 	@Column("id_purchase")
+	private long id;
+	
+	@Column("ident_purchase")
 	private String idPurchase;
 	
 	@Column("date_purchase")
