@@ -27,13 +27,10 @@ import lombok.NoArgsConstructor;
 @Table("purchases")
 public class Purchase {
 	
-	static String pattern = "MM/dd/yyyy HH:mm:ss";
-	static DateFormat df = new SimpleDateFormat(pattern);
-	
 	public Purchase(Set<LineaCompra> lineasDeCompra,UserPurchaseInfo user) {
 		
 		this.lineasCompra = lineasDeCompra;
-		this.date = df.format(Calendar.getInstance().getTime());
+		this.date =  new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
 		this.idPurchase= "Purchase"+String.valueOf(Calendar.getInstance().getTime().getMinutes())+String.valueOf(lineasCompra.size());
 		this.userPurchase = user;
 	}

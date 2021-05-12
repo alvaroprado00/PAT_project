@@ -4,7 +4,9 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.Table;
+import org.springframework.data.relational.core.mapping.Embedded.OnEmpty;
 
 import lombok.Data;
 
@@ -20,27 +22,22 @@ public class UserPurchaseInfo {
 		 this.zip = user.getZip();
 	 }
 		
-	 	@Column("first_name")
-		@NotNull
-		 private String firstName;
 
-	 	@Column("last_name")
+		@NotNull
+		private String firstName;
+
 		@NotNull
 		private String lastName;
 
-	 	@Column("email") 
 		@NotNull
 		private String email;
 
-	 	@Column("address")
 		@NotNull
 		private String address;
 
-	 	@Column("country")
 		@NotNull
 		private String country;
 
-	 	@Column("zip")		
 		@NotNull
 		private String zip;	
 
