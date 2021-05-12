@@ -9,7 +9,6 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.Data;
 
 @Data
-@Table("usersInfoPurchase")
 public class UserPurchaseInfo {
 	 
 	 public UserPurchaseInfo(UserPurchase user) {
@@ -20,32 +19,29 @@ public class UserPurchaseInfo {
 		 this.email = user.getEmail();
 		 this.zip = user.getZip();
 	 }
-	 
-		@Id
-		@Column("id_user_purchase")
-		 private long id;
 		
+	 	@Column("first_name")
 		@NotNull
-		@Column("first_mame")
 		 private String firstName;
+
+	 	@Column("last_name")
 		@NotNull
-		@Column("last_name") 
 		private String lastName;
-		 
+
+	 	@Column("email") 
 		@NotNull
-		@Column("email")
 		private String email;
-		
+
+	 	@Column("address")
 		@NotNull
-		@Column("address")
 		private String address;
-		
+
+	 	@Column("country")
 		@NotNull
-		@Column("country")
 		private String country;
-		
+
+	 	@Column("zip")		
 		@NotNull
-		@Column("zip")
 		private String zip;	
 
 }

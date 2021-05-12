@@ -53,16 +53,6 @@ tipo_tabaco VARCHAR(50),
 id_purchase INT REFERENCES purchases(id_purchase)
 );
 
-CREATE TABLE IF NOT EXISTS usersInfoPurchase(
-id_user_purchase INT AUTO_INCREMENT PRIMARY KEY,
-first_name VARCHAR(30),
-last_name VARCHAR(30),
-email VARCHAR(30),
-address VARCHAR(50),
-country VARCHAR(50),
-zip VARCHAR(50)
-);
-
 CREATE TABLE IF NOT EXISTS coments(
 
 coment_token VARCHAR(10) PRIMARY KEY,
